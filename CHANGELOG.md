@@ -12,3 +12,5 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Home page in French and English: hero with game picker, about, how to join, season events and FAQ.
 - Animated, esports-style design in the club colors: scroll reveals, floating icons, carousels.
 - Automatic language redirect, sitemap and robots.txt.
+- Events, Teams, Members, Gallery, Join and Contact pages.
+- Valorant team registration form (5 players + 1 sub, Riot IDs, ranks), saved to Supabase.

@@ -150,6 +150,7 @@ body {
 @utility intro-4 { animation-delay: 0.55s; }
 @utility intro-5 { animation-delay: 0.7s; }
 @utility intro-6 { animation-delay: 0.85s; }
+@utility intro-7 { animation-delay: 1s; }
 
 /* Float offsets so rows of floating items don't move in sync. */
 @utility float-delay-1 { animation-delay: -1s; }

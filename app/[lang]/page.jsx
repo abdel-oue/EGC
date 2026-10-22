@@ -1,26 +1,23 @@
 import { lang } from "next/root-params";
+import Faq from "@/components/Faq";
+import Season from "@/components/Season";
+import Steps from "@/components/Steps";
+import { alternates } from "@/lib/seo";
 import { getDictionary } from "./dictionaries";
 import Hero from "./_components/Hero";
 import About from "./_components/About";
-import Steps from "./_components/Steps";
-import Season from "./_components/Season";
-import Faq from "./_components/Faq";
 
 export async function generateMetadata() {
-  return {
-    alternates: {
-      canonical: `/${await lang()}`,
-      languages: { fr: "/fr", en: "/en", "x-default": "/fr" },
-    },
-  };
+  return { alternates: alternates(await lang(), "") };
 }
 
 export default async function Home() {
+  const locale = await lang();
   const dict = await getDictionary();
 
   return (
     <main>
-      <Hero dict={dict} />
+      <Hero lang={locale} dict={dict} />
       <About dict={dict} />
       <Steps dict={dict} />
       <Season dict={dict} />

@@ -11,6 +11,7 @@ npm run dev     # dev server on http://localhost:3000
 npm run build   # production build
 npm run start   # serve the production build
 npm run lint    # ESLint
+npm test        # node --test: runs every *.test.mjs (e.g. lib/registration.test.mjs)
 ```
 
 ## Repo structure
@@ -50,13 +51,16 @@ Every route below exists under both `/fr` and `/en` (e.g. `/fr/events`, `/en/eve
 | Route              | Page                                      |
 |--------------------|-------------------------------------------|
 | `/`                | Home: hero, next event, latest news       |
-| `/events`          | Upcoming and past tournaments/events      |
-| `/events/[slug]`   | Event details: date, game, rules, sign-up |
-| `/teams`           | Club teams per game                       |
-| `/members`         | Committee and members                     |
-| `/gallery`         | Photos from events                        |
-| `/join`            | How to join + membership form             |
-| `/contact`         | Contact info and socials                  |
+| `/events`          | Season events (from the dictionary `season.items` for now) |
+| `/events/[slug]`   | *Later:* event details, once events live in Supabase |
+| `/teams`           | Open registrations + club rosters (empty state for now) |
+| `/teams/register/[game]` | Team registration form. Exists for every game in `lib/site.js` with a `registration` config (Valorant only) |
+| `/members`         | Committee and members (empty state for now) |
+| `/gallery`         | Photos from events (empty state for now)  |
+| `/join`            | How to join, team registration banner, FAQ |
+| `/contact`         | Discord, socials, email (if set in `lib/site.js`), location |
+
+Shared page pieces: `PageHeader` (top of every inner page), `EmptyState` (until real content exists), `OpenRegistration` (banner linking to a registration form).
 
 When you add, rename or remove a page, update this table and `app/sitemap.js`.
 
@@ -131,11 +135,12 @@ Every color and font above must exist as a token in `app/globals.css` (`--color-
 
 ## Data: Supabase
 
-- Supabase (Postgres) holds dynamic content: events, teams, members, gallery, sign-ups.
-- Use `@supabase/ssr`. Two clients in `lib/supabase/`:
-  - `server.js` — for Server Components, Server Actions and Route Handlers (the default).
-  - `client.js` — for `"use client"` components only, when data must load in the browser.
+- Supabase (Postgres) holds dynamic data. Today: team registrations (`team_registrations`). Later: events, teams, members, gallery.
+- **Current client:** `lib/supabase/server.js` → `insertRow(table, row)`, a plain `fetch` to the REST API with the publishable key. No SDK yet. When we need reads with auth or a logged-in admin area, switch to `@supabase/ssr` (server + browser clients in `lib/supabase/`).
 - Read data in Server Components; write with Server Actions. Don't build API routes just to proxy Supabase.
+- **Team registrations flow:** form (`RegistrationForm.jsx`, client) → Server Action `registerTeam` (`app/[lang]/teams/register/[game]/actions.js`) → `validateRegistration` (`lib/registration.js`, the real validation, tested in `lib/registration.test.mjs`) → `insertRow`. Error codes map to `register.errors` in the dictionaries. A hidden `website` field is a honeypot for bots.
+- The public key can only **insert** pending registrations; there is no read policy. The committee reviews them in the Supabase dashboard (Table editor → `team_registrations`, set `status`).
+- To open registrations for another game: add a `registration` config to it in `lib/site.js`, allow the key in the table's `game` check constraint (new migration), and add its texts.
 - **Row Level Security (RLS) is on for every table.** Public read policies for public content; writes only for authenticated admins.
 - Schema changes go through migrations in `supabase/migrations/` (Supabase CLI), never hand-edited in the dashboard only.
 - The secret / service-role key is server-only. Never import it in a client component or prefix it with `NEXT_PUBLIC_`.
@@ -152,7 +157,7 @@ Every color and font above must exist as a token in `app/globals.css` (`--color-
 | `NEXT_PUBLIC_SITE_URL`                  | public       | canonical site URL (SEO, sitemap)|
 | `NEXT_PUBLIC_SUPABASE_URL`              | public       | Supabase project URL             |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`  | public       | Supabase publishable (anon) key  |
-| `SUPABASE_SECRET_KEY`                   | server only  | admin tasks that bypass RLS      |
+| `SUPABASE_SECRET_KEY`                   | server only  | admin tasks that bypass RLS (not used yet) |
 
 ## SEO
 

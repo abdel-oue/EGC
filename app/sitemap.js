@@ -1,8 +1,17 @@
 import { locales } from "@/lib/i18n";
-import { siteUrl } from "@/lib/site";
+import { games, siteUrl } from "@/lib/site";
 
-// Add every public route here (see CLAUDE.md "Site map").
-const routes = [""];
+// Every public route (see CLAUDE.md "Site map").
+const routes = [
+  "",
+  "/events",
+  "/teams",
+  ...games.filter((g) => g.registration).map((g) => `/teams/register/${g.key}`),
+  "/members",
+  "/gallery",
+  "/join",
+  "/contact",
+];
 
 export default function sitemap() {
   return routes.flatMap((route) =>

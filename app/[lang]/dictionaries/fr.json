@@ -6,11 +6,12 @@
   "nav": {
     "label": "Navigation principale",
     "home": "Accueil",
-    "games": "Jeux",
-    "about": "Le club",
+    "events": "Événements",
+    "teams": "Équipes",
+    "members": "Membres",
+    "gallery": "Galerie",
     "join": "Rejoindre",
-    "season": "Saison",
-    "faq": "FAQ",
+    "contact": "Contact",
     "menu": "Menu",
     "follow": "Suis-nous",
     "language": "Langue"
@@ -81,6 +82,118 @@
       { "q": "Comment participer à un tournoi ?", "a": "Les inscriptions ouvrent sur le Discord avant chaque événement. Suis le salon annonces." },
       { "q": "Je peux proposer un jeu ou un événement ?", "a": "Oui ! Contacte le bureau sur le Discord avec ton idée." }
     ]
+  },
+  "pages": {
+    "events": {
+      "ghost": "Agenda",
+      "title": "Événements",
+      "intro": "Tournois, LAN et soirées du club tout au long de la saison.",
+      "note": "Dates indicatives : les inscriptions ouvrent sur le Discord avant chaque événement."
+    },
+    "teams": {
+      "ghost": "Roster",
+      "title": "Équipes",
+      "intro": "Les équipes qui représentent EGC.",
+      "openLabel": "Inscriptions ouvertes",
+      "openTitle": "Tournoi Valorant",
+      "openText": "Monte ton équipe de 5 joueurs (+1 remplaçant) et inscris-la au tournoi du club.",
+      "openCta": "Inscrire mon équipe",
+      "emptyTitle": "Les rosters arrivent",
+      "emptyText": "Les équipes officielles du club seront présentées ici dès qu'elles seront formées."
+    },
+    "members": {
+      "ghost": "Crew",
+      "title": "Membres",
+      "intro": "Le bureau et les membres qui font vivre le club.",
+      "emptyTitle": "Bientôt ici",
+      "emptyText": "La présentation du bureau et des membres arrive très vite."
+    },
+    "gallery": {
+      "ghost": "Moments",
+      "title": "Galerie",
+      "intro": "Les meilleurs moments de nos événements.",
+      "emptyTitle": "Pas encore de photos",
+      "emptyText": "Les photos de nos premiers événements arriveront ici. En attendant, suis-nous sur Instagram."
+    },
+    "join": {
+      "ghost": "Go",
+      "title": "Rejoindre",
+      "intro": "Deviens membre d'EGC en quelques étapes.",
+      "teamTitle": "Tu as déjà une équipe ?",
+      "teamText": "Inscris-la directement au tournoi Valorant du club.",
+      "teamCta": "Inscrire une équipe Valorant"
+    },
+    "contact": {
+      "ghost": "Ping",
+      "title": "Contact",
+      "intro": "Une question, un partenariat, une idée d'événement ? Écris-nous.",
+      "discordTitle": "Discord",
+      "discordText": "Le moyen le plus rapide de joindre le bureau.",
+      "discordCta": "Rejoindre le serveur",
+      "socialsTitle": "Réseaux",
+      "socialsText": "Annonces, résultats et coulisses du club.",
+      "emailTitle": "E-mail",
+      "whereTitle": "Où nous trouver",
+      "whereText": "ESISA, Fès, Maroc",
+      "whereCta": "Ouvrir dans Maps"
+    }
+  },
+  "empty": {
+    "discord": "Suivre sur le Discord",
+    "instagram": "Voir Instagram"
+  },
+  "register": {
+    "ghost": "Inscription",
+    "title": "Équipe {game}",
+    "intro": "Inscris ton équipe au tournoi {game} d'EGC. {players} joueurs obligatoires, {subs} remplaçant optionnel.",
+    "team": "Équipe",
+    "teamName": "Nom de l'équipe",
+    "teamTag": "Tag (2 à 5 caractères)",
+    "captain": "Capitaine",
+    "captainName": "Nom complet",
+    "captainEmail": "E-mail",
+    "captainPhone": "Téléphone",
+    "captainDiscord": "Pseudo Discord",
+    "players": "Joueurs",
+    "player": "Joueur",
+    "sub": "Remplaçant (optionnel)",
+    "playerName": "Nom complet",
+    "riotId": "Riot ID",
+    "riotIdHint": "Pseudo#TAG",
+    "rank": "Rang actuel",
+    "rankPlaceholder": "Choisir…",
+    "ranks": {
+      "iron": "Fer",
+      "bronze": "Bronze",
+      "silver": "Argent",
+      "gold": "Or",
+      "platinum": "Platine",
+      "diamond": "Diamant",
+      "ascendant": "Ascendant",
+      "immortal": "Immortel",
+      "radiant": "Radiant"
+    },
+    "rules": "J'accepte le règlement du tournoi et je confirme que les informations sont exactes.",
+    "submit": "Envoyer l'inscription",
+    "sending": "Envoi…",
+    "successTitle": "Inscription reçue !",
+    "successText": "Ton équipe est enregistrée. Le bureau la valide et te contacte sur Discord.",
+    "successCta": "Retour aux équipes",
+    "errors": {
+      "required": "Champ obligatoire.",
+      "length": "Longueur invalide.",
+      "tag": "2 à 5 lettres ou chiffres.",
+      "email": "E-mail invalide.",
+      "phone": "Numéro invalide.",
+      "riotId": "Format attendu : Pseudo#TAG.",
+      "rank": "Choisis un rang.",
+      "duplicateRiot": "Ce Riot ID est déjà dans l'équipe.",
+      "rules": "Tu dois accepter le règlement.",
+      "form": "Corrige les champs signalés.",
+      "duplicate": "Ce nom d'équipe est déjà inscrit.",
+      "unavailable": "Les inscriptions en ligne ne sont pas encore ouvertes. Réessaie plus tard ou contacte-nous sur Discord.",
+      "server": "Une erreur est survenue. Réessaie dans un instant."
+    }
   },
   "footer": {
     "rights": "Tous droits réservés.",

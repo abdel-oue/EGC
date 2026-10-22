@@ -1,10 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import Carousel from "@/components/Carousel";
 import HudButton from "@/components/HudButton";
 import { games } from "@/lib/site";
 import { floatDelays } from "@/lib/motion";
 
-export default function Hero({ dict }) {
+export default function Hero({ lang, dict }) {
   const h = dict.hero;
   const g = dict.games;
 
@@ -41,7 +42,7 @@ export default function Hero({ dict }) {
           </h1>
           <p className="intro intro-5 mt-6 text-lg text-night/60">{h.tagline}</p>
           <div className="intro intro-6 mt-10 flex flex-wrap gap-4">
-            <HudButton href="#join">{h.cta}</HudButton>
+            <HudButton href={`/${lang}/join`}>{h.cta}</HudButton>
             <HudButton href="#season" variant="outline">
               {h.secondary}
             </HudButton>
@@ -60,9 +61,9 @@ export default function Hero({ dict }) {
             }
           >
             {games.map((game, i) => (
-              <a
+              <Link
                 key={game.key}
-                href="#join"
+                href={game.registration ? `/${lang}/teams/register/${game.key}` : `/${lang}/teams`}
                 className="chamfer shine group relative flex h-80 w-56 shrink-0 snap-start flex-col justify-between overflow-clip bg-night p-5 text-offwhite transition-transform duration-500 hover:-translate-y-2"
               >
                 <span aria-hidden="true" className="absolute -right-10 top-0 h-full w-20 skew-x-[-20deg] bg-accent transition-transform duration-500 group-hover:translate-x-4" />
@@ -78,7 +79,7 @@ export default function Hero({ dict }) {
                     <span aria-hidden="true">→</span>
                   </span>
                 </span>
-              </a>
+              </Link>
             ))}
           </Carousel>
         </div>

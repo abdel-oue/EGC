@@ -47,7 +47,7 @@ export default async function RootLayout({ children }) {
         <div className="relative overflow-x-clip lg:pl-64">
           <div className="absolute right-0 top-0 z-30 hidden items-center gap-4 px-12 py-6 lg:flex">
             <LangSwitch label={dict.nav.language} />
-            <HudButton href={`/${locale}#join`} className="px-5 py-3">
+            <HudButton href={`/${locale}/join`} className="px-5 py-3">
               {dict.cta.join}
             </HudButton>
           </div>

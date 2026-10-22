@@ -27,8 +27,11 @@ app/
   globals.css         # Tailwind import + brand tokens
   sitemap.js          # generates /sitemap.xml
   robots.js           # generates /robots.txt
-components/           # components shared across routes
+components/           # components shared across routes (Sidebar, Footer, Reveal, Carousel, HudButton…)
 lib/                  # non-UI helpers and constants
+  i18n.js             # locales list + default locale (used by proxy.js and dictionaries)
+  site.js             # site URL, social links, games list
+  motion.js           # literal animation delay class lists
   supabase/           # Supabase clients (server.js, client.js)
 public/               # static files served from / (logo, images, icons)
 proxy.js              # redirects locale-less URLs (/events -> /fr/events)
@@ -82,7 +85,20 @@ When you add, rename or remove a page, update this table and `app/sitemap.js`.
 - Tailwind utility classes only. No CSS modules, no inline `style={}`, no new `.css` files.
 - Colors, fonts and other design tokens go in `app/globals.css` (`:root` variables plus `@theme inline`). Use them as classes (`bg-offwhite`, `text-accent`) instead of hard-coding hex values in components.
 - Mobile-first: write base classes for phones, then add `sm:` / `md:` / `lg:`.
-- Support dark mode with `dark:` variants.
+- Light theme only (no `dark:` variants). Dark *sections* (`bg-night`) are fine for rhythm.
+- Never build class names at runtime (`` `intro-${i}` ``): Tailwind only generates classes it finds as plain strings. Use a literal list (see `lib/motion.js`).
+- Use `overflow-clip`, never `overflow-hidden`, to crop decorations. Hidden containers can still be scrolled sideways by the browser (carousel snapping did exactly that).
+
+## Look & motion
+
+Layout and motion are modeled on primeeleague.com/prime, in EGC colors: fixed dark sidebar, HUD-style chamfered cards and buttons, giant outlined "ghost" text behind headings, carousels with arrow buttons.
+
+- All animation is CSS (keyframes and utilities in `app/globals.css`) plus one tiny client component, `components/Reveal.jsx` (IntersectionObserver). No animation library.
+- `intro intro-1…6`: staggered entrance on page load. `<Reveal from="up|left|right|zoom">`: entrance on scroll; stagger with `delay-*` classes.
+- `animate-float` / `animate-drift` / `animate-glow` for idle motion; offset rows with `float-delay-1…4`.
+- HUD utilities: `chamfer`, `chamfer-sm`, `hud-corners`, `shine`, `bg-grid`, `text-ghost` (set `--ghost` on dark sections).
+- Carousels: `components/Carousel.jsx` (native scroll-snap + arrow buttons), no slider library.
+- `prefers-reduced-motion` turns all of it off; keep it that way for anything new.
 
 ## Brand guide
 
@@ -97,14 +113,15 @@ Source of truth: `brand/` (master rules in `brand/prompts/00-brand-core.md`). If
 | `offwhite`   | `#F5F3EF` | default page background; text on dark                  |
 | `graphite`   | `#2A2A2E` | cards, secondary blocks                                |
 
-- **Theme:** light by default (Off-White background, Night text, orange accents). Dark mode = Night background, Graphite cards, Off-White text.
+- **Theme:** light (Off-White background, Night text, orange accents). Night/Graphite for the sidebar, cards and contrast sections.
 - **Never:** purple, neon pink, rainbow/RGB effects, yellow text on white.
 - **Fonts:** headings **Space Grotesk Bold, UPPERCASE, tight letter-spacing**; body **Inter** Regular/Medium. Max 2 fonts. Load both with `next/font/google` in the root layout.
 - **Logo:** official files only, never redrawn, stretched, rotated, shadowed or glowing. Orange on dark backgrounds; orange or Night on light. Clear space around it = height of the "E".
   - **Icon (crest):** `brand/svg/cropped/icon/icon.svg` — favicon, avatars, small spaces.
   - **Full logo (crest + wordmark):** `brand/svg/cropped/Untitled (15).svg` — header, footer, hero.
   - PNG versions in `brand/png/`. Other `Untitled (*).svg` files in `brand/svg/cropped/` are drafts; don't use them.
-  - Copy the files a page needs into `public/brand/` as `logo-icon.svg` and `logo-full.svg`; don't serve from `brand/`. The source SVGs are filled black (`fill="#000000"`), so never use them as-is. Either render the logo inline as a component (`components/Logo.jsx`) with `fill="currentColor"` so it takes `text-accent` / `text-night` from its parent, or export pre-colored files (`logo-full-orange.svg`, `logo-full-night.svg`) for `next/image`. (`currentColor` does not work inside an `<img>`.)
+  - The source SVGs are filled black, so the site uses pre-colored copies in `public/brand/`: `logo-full.svg` / `logo-icon.svg` (orange) and `logo-full-night.svg` / `logo-icon-night.svg` (Night). Game icons are copied to `public/brand/games/`. `app/icon.svg` is the favicon. Don't serve from `brand/`.
+  - To add a color: `sed 's/fill="#000000"/fill="#HEX"/' brand/svg/cropped/icon/icon.svg > public/brand/logo-icon-<name>.svg`.
 - **Game icons:** `brand/game-icons/` (Valorant, League, FC, Minecraft, Discord), SVG + PNG, same visual family as the crest.
 - **Graphic elements:** angled cuts at the same slant as the logo letters, thin orange lines, subtle grid, small HUD-style corner brackets `[ ]`.
 - **Photos:** real members, events and setups with a slight dark overlay. No stock photos.

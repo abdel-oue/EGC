@@ -1,0 +1,89 @@
+{
+  "meta": {
+    "title": "ESISA Gaming Club",
+    "description": "Le club esport et gaming officiel de l'ESISA à Fès. Tournois, équipes, LAN et communauté."
+  },
+  "nav": {
+    "label": "Navigation principale",
+    "home": "Accueil",
+    "games": "Jeux",
+    "about": "Le club",
+    "join": "Rejoindre",
+    "season": "Saison",
+    "faq": "FAQ",
+    "menu": "Menu",
+    "follow": "Suis-nous",
+    "language": "Langue"
+  },
+  "cta": {
+    "join": "Rejoindre"
+  },
+  "hero": {
+    "kicker": "ESISA · Fès — Saison 2026-27",
+    "line1": "Level up",
+    "line2": "Ton jeu —",
+    "side1": "Rejoins",
+    "side2": "le club",
+    "line3": "Esport ESISA",
+    "tagline": "Chaque match compte — chaque joueur aussi.",
+    "cta": "Commencer",
+    "secondary": "Voir la saison"
+  },
+  "games": {
+    "kicker": "Choisis ton",
+    "title": "Jeu",
+    "join": "Rejoindre",
+    "prev": "Jeu précédent",
+    "next": "Jeu suivant"
+  },
+  "about": {
+    "label": "À propos",
+    "ghost": "EGC",
+    "lead": "EGC, c'est là où le skill rencontre la passion.",
+    "p1": "Né au cœur de l'ESISA, le club rassemble les joueurs de l'école autour de la compétition, de l'entraide et des événements. Débutant ou tryharder, il y a une place pour toi.",
+    "h2": "Ici, on ne fait pas que jouer — on progresse.",
+    "p2": "Chaque scrim est un pas en avant. Chaque tournoi construit ton histoire. Solo ou en équipe, EGC crée l'espace pour jouer sérieusement, dans une ambiance saine.",
+    "closing": "C'est ici que les joueurs de l'ESISA passent au niveau supérieur."
+  },
+  "steps": {
+    "ghost": "Comment",
+    "title": "Rejoindre ?",
+    "cta": "Rejoindre le Discord",
+    "step": "Étape",
+    "prev": "Étape précédente",
+    "next": "Étape suivante",
+    "items": [
+      { "title": "Rejoins le Discord", "text": "Tout passe par notre serveur : annonces, recrutement, scrims." },
+      { "title": "Remplis l'adhésion", "text": "Un formulaire rapide pour devenir membre officiel du club." },
+      { "title": "Choisis ton jeu", "text": "Intègre la section de ton jeu et rencontre ton équipe." },
+      { "title": "Entre dans l'arène", "text": "Scrims, tournois internes et compétitions inter-écoles." }
+    ]
+  },
+  "season": {
+    "title": "Saison 2026-27",
+    "label": "Événement",
+    "items": [
+      { "name": "Soirée de lancement", "date": "Nov. 2026" },
+      { "name": "Tournoi Valorant", "date": "Déc. 2026" },
+      { "name": "Ligue League of Legends", "date": "Jan. – Fév. 2027" },
+      { "name": "Coupe EA Sports FC", "date": "Mars 2027" },
+      { "name": "Build Battle Minecraft", "date": "Avr. 2027" },
+      { "name": "LAN de fin de saison", "date": "Mai 2027" }
+    ]
+  },
+  "faq": {
+    "title": "FAQ",
+    "items": [
+      { "q": "Faut-il être étudiant à l'ESISA ?", "a": "Oui, le club est réservé aux étudiants de l'ESISA. Certains événements sont ouverts aux invités : on l'annonce sur le Discord." },
+      { "q": "L'adhésion est-elle payante ?", "a": "Les détails de l'adhésion sont communiqués en début de saison sur le Discord et à l'école." },
+      { "q": "Je débute, je peux rejoindre ?", "a": "Bien sûr. Le club accueille tous les niveaux : on organise des sessions pour progresser ensemble." },
+      { "q": "Quels jeux sont représentés ?", "a": "Valorant, League of Legends, EA Sports FC et Minecraft, et d'autres selon la demande des membres." },
+      { "q": "Comment participer à un tournoi ?", "a": "Les inscriptions ouvrent sur le Discord avant chaque événement. Suis le salon annonces." },
+      { "q": "Je peux proposer un jeu ou un événement ?", "a": "Oui ! Contacte le bureau sur le Discord avec ton idée." }
+    ]
+  },
+  "footer": {
+    "rights": "Tous droits réservés.",
+    "place": "Club esport officiel de l'ESISA · Fès, Maroc"
+  }
+}

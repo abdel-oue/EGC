@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">EGC — League of Legends</title>
+  <desc id="desc">League of Legends emblem in EGC orange, framed by the original logo's upper half-star and a simple tapered underline. Transparent background.</desc>
+  <g fill="#E35205">
+  <path transform="matrix(.11 0 0 -.11 -236.25 934.4)" d="M4439 7888 c-205 -330 -439 -649 -663 -907 l-149 -171 -464 0 -464 0 153 -164 153 -165 360 0 360 -1 62 78 c34 42 111 138 171 212 l109 135 -61 5 -61 5 55 59 c99 106 164 167 222 207 31 21 70 55 87 76 l31 38 0 -175 0 -175 64 65 64 65 4 182 c2 101 5 183 8 183 3 0 21 -24 40 -52 173 -258 269 -381 569 -735 l146 -172 356 -1 356 0 154 163 153 162 -460 3 -461 2 -75 83 c-257 284 -534 649 -717 946 -35 56 -64 101 -66 101 -2 0 -18 -24 -36 -52z"/>
+  <path d="M182 425H330L306 437H206Z"/>
+<g transform="translate(33.28 72) scale(.87)">
+      <defs>
+        <path id="league-l" d="M190 160H250L242 180V321H337L324 365H190L205 336V189Z"/>
+        <mask id="league-ring-gap" maskUnits="userSpaceOnUse" x="100" y="130" width="300" height="270">
+          <rect x="100" y="130" width="300" height="270" fill="white"/>
+          <use href="#league-l" fill="black" stroke="black" stroke-width="14" stroke-linejoin="miter"/>
+        </mask>
+      </defs>
+      <circle cx="256" cy="269" r="89" fill="none" stroke="#E35205" stroke-width="14" mask="url(#league-ring-gap)"/>
+      <use href="#league-l"/>
+    </g></g>
+</svg>

@@ -1,0 +1,116 @@
+{
+  "members": [
+    {
+      "id": "ouedghiri-abdelaziz",
+      "name": "OUEDGHIRI Abdelaziz",
+      "role_fr": "Président",
+      "role_en": "President",
+      "image_path": "ouedghiri-abdelaziz.jpeg",
+      "photo_offset_y": 0,
+      "sort_order": 0,
+      "visible": true
+    },
+    {
+      "id": "loutaoui-adam",
+      "name": "LOUTAOUI Adam",
+      "role_fr": "Vice-président",
+      "role_en": "Vice President",
+      "image_path": "loutaoui-adam.jpeg",
+      "photo_offset_y": 0,
+      "sort_order": 1,
+      "visible": true
+    },
+    {
+      "id": "bassim-rayan",
+      "name": "BASSIM Rayan",
+      "role_fr": "Trésorier",
+      "role_en": "Treasurer",
+      "image_path": "bassim-rayan.jpeg",
+      "photo_offset_y": 0,
+      "sort_order": 2,
+      "visible": true
+    },
+    {
+      "id": "idrissi-kaitouni-mehdi",
+      "name": "IDRISSI KAITOUNI Mehdi",
+      "role_fr": "Secrétaire",
+      "role_en": "Secretary",
+      "image_path": "idrissi-kaitouni-mehdi.jpeg",
+      "photo_offset_y": -80,
+      "sort_order": 3,
+      "visible": true
+    },
+    {
+      "id": "arayane-nabil",
+      "name": "ARAYANE Nabil",
+      "role_fr": "Responsable communication & contenu",
+      "role_en": "Communications & Content Lead",
+      "image_path": "arayane-nabil.jpeg",
+      "photo_offset_y": 0,
+      "sort_order": 4,
+      "visible": true
+    },
+    {
+      "id": "el-kerraz-saad",
+      "name": "EL KERRAZ Saad",
+      "role_fr": "Responsable logistique",
+      "role_en": "Logistics Lead",
+      "image_path": "el-kerraz-saad.jpeg",
+      "photo_offset_y": 90,
+      "sort_order": 5,
+      "visible": true
+    },
+    {
+      "id": "essalhi-ilyass",
+      "name": "ESSALHI Ilyass",
+      "role_fr": "Responsable Minecraft",
+      "role_en": "Minecraft Lead",
+      "image_path": "essalhi-ilyass.jpeg",
+      "photo_offset_y": 0,
+      "sort_order": 6,
+      "visible": true
+    },
+    {
+      "id": "fazghoun-yassmine",
+      "name": "FAZGHOUN Yassmine",
+      "role_fr": "Chargée des opérations",
+      "role_en": "Operations Officer",
+      "image_path": "fazghoun-yassmine.jpeg",
+      "photo_offset_y": -100,
+      "sort_order": 7,
+      "visible": true
+    },
+    {
+      "id": "lachkar-yasser",
+      "name": "LACHKAR Yasser",
+      "role_fr": "Chargé des opérations",
+      "role_en": "Operations Officer",
+      "image_path": "lachkar-yasser.jpeg",
+      "photo_offset_y": 0,
+      "sort_order": 8,
+      "visible": true
+    },
+    {
+      "id": "squalli-omar",
+      "name": "SQUALLI Omar",
+      "role_fr": "Chargé des opérations",
+      "role_en": "Operations Officer",
+      "image_path": "squalli-omar.jpeg",
+      "photo_offset_y": 0,
+      "sort_order": 9,
+      "visible": true
+    }
+  ],
+  "media": [
+    {
+      "id": "valorant-october-promotion",
+      "game": "valorant",
+      "caption_fr": "Tournoi Valorant — Skirmish 2v2",
+      "caption_en": "Valorant tournament — Skirmish 2v2",
+      "image_path": "valorant-october.png",
+      "kind": "promotion",
+      "sort_order": 0,
+      "visible": true
+    }
+  ]
+}

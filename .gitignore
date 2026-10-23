@@ -10,6 +10,12 @@
 
 # next.js
 /.next/
+**/.next/
+**/node_modules/
+**/__pycache__/
+.npm-cache/
+test-results/
+playwright-report/
 /out/
 
 # production

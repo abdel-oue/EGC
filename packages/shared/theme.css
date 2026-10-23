@@ -1,0 +1,13 @@
+@theme {
+  --color-accent: #e35205;
+  --color-night: #0e0e10;
+  --color-offwhite: #f5f3ef;
+  --color-graphite: #2a2a2e;
+  --color-panel: #e9e7e3;
+  --color-line: #d8d5cf;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+}

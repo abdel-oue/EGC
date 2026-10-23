@@ -2,12 +2,22 @@
   "name": "egc",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "npm run dev --workspace @egc/landing",
+    "dev:admin": "npm run dev --workspace @egc/admin",
+    "build": "npm run build --workspaces --if-present",
+    "build:landing": "npm run build --workspace @egc/landing",
+    "build:admin": "npm run build --workspace @egc/admin",
+    "start": "npm run start --workspace @egc/landing",
+    "start:admin": "npm run start --workspace @egc/admin",
     "lint": "eslint",
-    "test": "node --test"
+    "test": "node --test packages/shared/*.test.mjs apps/landing/lib/*.test.mjs",
+    "test:browser": "playwright test",
+    "seed": "node scripts/seed.mjs"
   },
   "dependencies": {
     "next": "16.4.2",
@@ -15,6 +25,8 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.11",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "eslint": "^9",
     "eslint-config-next": "16.4.2",

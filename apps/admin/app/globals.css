@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@import "@egc/shared/theme.css";
+
+@source "../../../packages/shared";
+
+body {
+  background: var(--color-offwhite);
+  color: var(--color-night);
+}
+
+input:not([type="checkbox"]), select, textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-offwhite);
+}
+
+input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+button, summary {
+  cursor: pointer;
+}
+
+input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="true"] {
+  border-color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

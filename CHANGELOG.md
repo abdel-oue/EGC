@@ -14,3 +14,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Automatic language redirect, sitemap and robots.txt.
 - Events, Teams, Members, Gallery, Join and Contact pages.
 - Valorant team registration form (5 players + 1 sub, Riot IDs, ranks), saved to Supabase.
+
+- Separate landing and administration apps with shared branding and validation.
+- Member portraits, game galleries, event-specific registrations, and a contact form.
+- Staff content management, submission review, invitations, and an activity journal.
+
+### Changed
+- French opens by default regardless of browser language; English remains available.
+- Teams pages redirect to members and game events; existing registrations remain available to staff.
+- Instagram artwork in `structure/` supplies the visual direction and initial club content.

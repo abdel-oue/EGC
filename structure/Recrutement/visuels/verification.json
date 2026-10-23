@@ -1,0 +1,41 @@
+[
+  {
+    "file": "recrutement-post.png",
+    "dimensions": [
+      1080,
+      1350
+    ],
+    "orange_fraction": 0.0172,
+    "roles": [
+      "Responsable Sponsoring",
+      "Responsable Logistique",
+      "Responsable Communication & Contenu",
+      "Responsable Minecraft",
+      "Membre du Staff"
+    ],
+    "deadline": "2026-10-11",
+    "sticker_rectangle": null
+  },
+  {
+    "file": "recrutement-story.png",
+    "dimensions": [
+      1080,
+      1920
+    ],
+    "orange_fraction": 0.0124,
+    "roles": [
+      "Responsable Sponsoring",
+      "Responsable Logistique",
+      "Responsable Communication & Contenu",
+      "Responsable Minecraft",
+      "Membre du Staff"
+    ],
+    "deadline": "2026-10-11",
+    "sticker_rectangle": [
+      260,
+      1504,
+      820,
+      1594
+    ]
+  }
+]

@@ -1,0 +1,169 @@
+{
+  "output_dir": "white",
+  "logo_width": 285,
+  "footer": "ESISA GAMING CLUB",
+  "theme": {
+    "background": "#F5F3EF",
+    "text": "#0E0E10",
+    "accent": "#E35205",
+    "panel": "#E9E7E3",
+    "border": "#D8D5CF"
+  },
+  "assets": {
+    "logo": "../../Recrutement/visuels/assets/full-logo.png",
+    "headline_font": "../../Recrutement/visuels/assets/SpaceGrotesk.ttf",
+    "body_font": "../../Recrutement/visuels/assets/Inter.ttf",
+    "backgrounds": {
+      "cover": "assets/background-cover.png",
+      "closing": "assets/background-closing.png",
+      "member": "assets/background-cover.png",
+      "group": "assets/background-cover.png"
+    }
+  },
+  "slides": [
+    {
+      "type": "cover",
+      "id": "cover",
+      "title": "LA TEAM.",
+      "subtitle": "Les visages derrière l'ESISA Gaming Club.",
+      "swipe": "DÉCOUVRE LA TEAM →"
+    },
+    {
+      "type": "member",
+      "id": "ouedghiri-abdelaziz",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "OUEDGHIRI Abdelaziz",
+        "role": "Président",
+        "photo": "photos/ouedghiri-abdelaziz.jpeg",
+        "photo_offset_y": 0
+      }
+    },
+    {
+      "type": "member",
+      "id": "loutaoui-adam",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "LOUTAOUI Adam",
+        "role": "Vice-président",
+        "photo": "photos/loutaoui-adam.jpeg",
+        "photo_offset_y": 0
+      }
+    },
+    {
+      "type": "member",
+      "id": "bassim-rayan",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "BASSIM Rayan",
+        "role": "Trésorier",
+        "photo": "photos/bassim-rayan.jpeg",
+        "photo_offset_y": 0
+      }
+    },
+    {
+      "type": "member",
+      "id": "idrissi-kaitouni-mehdi",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "IDRISSI KAITOUNI Mehdi",
+        "role": "Secrétaire",
+        "photo": "photos/idrissi-kaitouni-mehdi.jpeg",
+        "photo_offset_y": -80
+      }
+    },
+    {
+      "type": "member",
+      "id": "arayane-nabil",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "ARAYANE Nabil",
+        "role": "Responsable communication & contenu",
+        "photo": "photos/arayane-nabil.jpeg",
+        "photo_offset_y": 0
+      }
+    },
+    {
+      "type": "member",
+      "id": "el-kerraz-saad",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "EL KERRAZ Saad",
+        "role": "Responsable logistique",
+        "photo": "photos/el-kerraz-saad.jpeg",
+        "photo_offset_y": 90
+      }
+    },
+    {
+      "type": "member",
+      "id": "essalhi-ilyass",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "ESSALHI Ilyass",
+        "role": "Responsable Minecraft",
+        "photo": "photos/essalhi-ilyass.jpeg",
+        "photo_offset_y": 0
+      }
+    },
+    {
+      "type": "member",
+      "id": "fazghoun-yassmine",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "FAZGHOUN Yassmine",
+        "role": "Chargée des opérations",
+        "photo": "photos/fazghoun-yassmine.jpeg",
+        "photo_offset_y": -100
+      }
+    },
+    {
+      "type": "member",
+      "id": "lachkar-yasser",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "LACHKAR Yasser",
+        "role": "Chargé des opérations",
+        "photo": "photos/lachkar-yasser.jpeg",
+        "photo_offset_y": 0
+      }
+    },
+    {
+      "type": "member",
+      "id": "squalli-omar",
+      "title": "MEMBRE DE LA TEAM",
+      "member": {
+        "name": "SQUALLI Omar",
+        "role": "Chargé des opérations",
+        "photo": "photos/squalli-omar.jpeg",
+        "photo_offset_y": 0
+      }
+    },
+    {
+      "type": "group",
+      "id": "full-team",
+      "show_roles": false,
+      "title": "UNE MÊME ÉQUIPE.",
+      "members": [
+        "ouedghiri-abdelaziz",
+        "loutaoui-adam",
+        "bassim-rayan",
+        "idrissi-kaitouni-mehdi",
+        "arayane-nabil",
+        "el-kerraz-saad",
+        "essalhi-ilyass",
+        "fazghoun-yassmine",
+        "lachkar-yasser",
+        "squalli-omar"
+      ]
+    },
+    {
+      "type": "closing",
+      "id": "closing",
+      "title": "LE JEU\nNOUS\nRASSEMBLE.",
+      "subtitle": "Suis le club. Vis la suite.",
+      "cta": "REJOINS LA COMMUNAUTÉ"
+    }
+  ],
+  "member_photo_width": 760,
+  "member_photo_height": 580
+}

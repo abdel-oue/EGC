@@ -22,6 +22,6 @@ Use migrations for all schema changes. RLS protects every data table. Public vis
 
 ## Commands and delivery
 
-Run commands from the root: `npm run dev`, `npm run dev:admin`, `npm run lint`, `npm test`, `npm run build`, `npm run test:browser`. See README.md for environment, migration, seeding, first-admin and deployment instructions. App environment files live inside each app; the old root `.env` is not automatically loaded.
+Run commands from the root: `npm run dev`, `npm run dev:admin`, `npm run lint`, `npm test`, `npm run build`, `npm run test:browser`. See README.md and the manual in `docs/` for environment, migration, seeding, first-admin, git workflow and Cloudflare Workers deployment instructions. App environment files live inside each app; the old root `.env` is not automatically loaded.
 
 Use a feature branch and Conventional Commits; do not commit directly to main. Update the changelog for user-visible changes. Update the sitemap when public routes change, and keep admin routes excluded from indexing. Run relevant checks and both builds before delivery. Never apply remote migrations, send invitations, or deploy without user authorization for those external actions.

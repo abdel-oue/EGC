@@ -11,7 +11,7 @@ const eslintConfig = defineConfig([
     },
   },
   // Override default ignores of eslint-config-next.
-  globalIgnores(["**/.next/**", "out/**", "build/**", "structure/**", ".npm-cache/**", "test-results/**"]),
+  globalIgnores(["**/.next/**", "**/.open-next/**", "**/.wrangler/**", "out/**", "build/**", "structure/**", ".npm-cache/**", "test-results/**"]),
 ]);
 
 export default eslintConfig;

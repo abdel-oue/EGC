@@ -6,12 +6,18 @@
   "scripts": {
     "dev": "next dev --port 3001",
     "build": "next build",
-    "start": "next start --port 3001"
+    "start": "next start --port 3001",
+    "preview": "opennextjs-cloudflare build --openNextConfigPath open-next.config.mjs && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build --openNextConfigPath open-next.config.mjs && opennextjs-cloudflare deploy"
   },
   "dependencies": {
     "@egc/shared": "*",
     "next": "16.4.2",
     "react": "19.3.0",
     "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.13",
+    "wrangler": "^4.152.0"
   }
 }

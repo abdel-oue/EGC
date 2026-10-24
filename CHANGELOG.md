@@ -18,6 +18,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Separate landing and administration apps with shared branding and validation.
 - Member portraits, game galleries, event-specific registrations, and a contact form.
 - Staff content management, submission review, invitations, and an activity journal.
+- Cloudflare Workers deployment for the landing and admin apps as two separate Workers.
+- Project manual in `docs/`: local development, environment and secrets, git workflow, deployment, database and content.
 
 ### Changed
 - French opens by default regardless of browser language; English remains available.

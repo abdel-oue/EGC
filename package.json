@@ -17,7 +17,11 @@
     "lint": "eslint",
     "test": "node --test packages/shared/*.test.mjs apps/landing/lib/*.test.mjs",
     "test:browser": "playwright test",
-    "seed": "node scripts/seed.mjs"
+    "seed": "node scripts/seed.mjs",
+    "preview:landing": "npm run preview --workspace @egc/landing",
+    "preview:admin": "npm run preview --workspace @egc/admin",
+    "deploy:landing": "npm run deploy --workspace @egc/landing",
+    "deploy:admin": "npm run deploy --workspace @egc/admin"
   },
   "dependencies": {
     "next": "16.4.2",

@@ -46,12 +46,23 @@ cd ../..
 
 Then, in the Cloudflare dashboard → **Workers & Pages** → each Worker → **Settings → Domains & Routes**, add a custom domain, e.g.:
 
-- `egc-landing` → `esisagaming.club` (example)
-- `egc-admin` → `admin.esisagaming.club` (example)
+- `egc-landing` → `esisa-gaming.club` (and optionally `www.esisa-gaming.club`)
+- `egc-admin` → `admin.esisa-gaming.club`
 
 Afterwards:
 
-- Set `NEXT_PUBLIC_SITE_URL` / `NEXT_PUBLIC_ADMIN_URL` in the app env files to the real domains, then redeploy.
+- Production URLs live in `apps/landing/.env.production.local` and `apps/admin/.env.production.local` (git-ignored). Builds and deploys read these; local dev keeps using `.env.local` with localhost. If either file is missing, create it:
+
+  ```
+  # apps/landing/.env.production.local
+  NEXT_PUBLIC_SITE_URL=https://esisa-gaming.club
+
+  # apps/admin/.env.production.local
+  NEXT_PUBLIC_SITE_URL=https://esisa-gaming.club
+  NEXT_PUBLIC_ADMIN_URL=https://admin.esisa-gaming.club
+  ```
+
+  Redeploy both Workers after changing them.
 - In Supabase Auth, set the Site URL to the admin domain and allow `/auth/callback`, `/auth/confirm` and `/reset-password` on it ([Database and staff accounts](database.md#staff-accounts)).
 
 ## Preview locally (Workers runtime)

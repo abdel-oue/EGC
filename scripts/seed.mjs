@@ -82,6 +82,52 @@ events.push({
   substitute_count: 0,
   registration_enabled: true,
 });
+// Past events reconstructed from the club's Instagram posts and highlights.
+const past = [
+  {
+    slug: "tournoi-league-of-legends-ramadan-2025",
+    title_fr: "Tournoi League of Legends — Ramadan 2025",
+    title_en: "League of Legends tournament — Ramadan 2025",
+    description_fr: "Tournoi League of Legends en équipes organisé à l’ESISA pendant le mois de Ramadan, avec les matchs diffusés sur Twitch.",
+    description_en: "Team League of Legends tournament held at ESISA during Ramadan, with matches streamed on Twitch.",
+    starts_at: "2025-03-15T21:00:00+00:00",
+    game: "league",
+    entry_type: "team",
+    player_count: 5,
+  },
+  {
+    slug: "tournoi-fifa-20-decembre-2025",
+    title_fr: "Tournoi FIFA",
+    title_en: "FIFA tournament",
+    description_fr: "Tournoi FIFA ouvert à 16 joueurs, samedi 20 décembre à partir de 12:30.",
+    description_en: "FIFA tournament for 16 players, Saturday 20 December from 12:30.",
+    starts_at: "2025-12-20T12:30:00+01:00",
+    game: "fc",
+  },
+  {
+    slug: "tournoi-2xko-2-mars-2026",
+    title_fr: "Tournoi 2XKO",
+    title_en: "2XKO tournament",
+    description_fr: "Tournoi 1v1 sur 2XKO, le jeu de combat de Riot Games dans l’univers de League of Legends. Lundi 2 mars à partir de 15:30 au réfectoire.",
+    description_en: "1v1 tournament on 2XKO, Riot Games' fighting game set in the League of Legends universe. Monday 2 March from 15:30 in the cafeteria.",
+    starts_at: "2026-03-02T15:30:00+01:00",
+    location: "Réfectoire, ESISA, Fès",
+  },
+  {
+    slug: "tournoi-valorant-en-ligne-mai-2026",
+    title_fr: "Tournoi Valorant en ligne",
+    title_en: "Online Valorant tournament",
+    description_fr: "Tournoi amical gratuit et 100 % en ligne pendant les vacances. Finale en BO3 le jeudi 7 mai à 22:00, en direct sur Twitch. Sencity est sacré champion après la disqualification de Vortex.",
+    description_en: "Free, fully online friendly tournament during the holidays. BO3 final on Thursday 7 May at 22:00, live on Twitch. Sencity won the title after Vortex was disqualified.",
+    starts_at: "2026-05-07T22:00:00+01:00",
+    game: "valorant",
+    location: "En ligne",
+    entry_type: "team",
+    player_count: 5,
+  },
+];
+events.push(...past.map((event) => ({ ...event, status: "published", registration_enabled: false })));
+
 for (const event of events) {
   check(await client.from("events").upsert(event, { onConflict: "slug", ignoreDuplicates: true }));
 }

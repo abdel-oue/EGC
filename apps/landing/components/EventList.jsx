@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/Link";
 import { eventDate, localized } from "@egc/shared/i18n.js";
 import { registrationOpen } from "@egc/shared/validation.js";
 

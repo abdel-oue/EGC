@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "@/components/Link";
+import Link from "next/link";
 import LangSwitch from "@/components/LangSwitch";
 import NavLinks from "@/components/NavLinks";
 import Socials from "@/components/Socials";

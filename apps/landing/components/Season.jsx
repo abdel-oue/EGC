@@ -1,4 +1,4 @@
-import Link from "@/components/Link";
+import Link from "next/link";
 import { lang } from "next/root-params";
 import EventList from "@/components/EventList";
 import { getContent } from "@/lib/content";

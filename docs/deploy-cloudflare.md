@@ -115,9 +115,9 @@ The Worker name in the dashboard must match the `name` in that app's `wrangler.j
 - The OpenNext config files are JavaScript (`open-next.config.mjs`), so the build scripts pass `--openNextConfigPath open-next.config.mjs`.
 - OpenNext warns that builds made on Windows may fail at runtime. Prefer building from WSL or from Workers Builds (Linux).
 
-## ⚠️ Known issue: landing dynamic sections (October 2026)
+## Why landing has Cache Components disabled (October 2026)
 
-Tested with Next.js 16.4.2 and `@opennextjs/cloudflare` 1.20.13 (built on Windows): admin works on Workers. Landing pages return 200, but only their prerendered shell renders. Database-driven sections streamed after `connection()` (members, events, galleries) never arrive. Next.js logs that it "cannot guarantee that Cache Components will run as expected due to the current runtime's implementation of `setTimeout()`". The same build works under `next start`. Do not deploy landing to Workers until a preview shows those sections.
+With Next.js 16.4.2 and `@opennextjs/cloudflare` 1.20.x, Cache Components (partial prerendering) were unreliable on Workers. Pages kept only their static shell, responses hung, and client navigation received empty payloads (opennextjs-cloudflare #1115, #1223, #1369). Landing therefore runs with `cacheComponents: false` and renders on each request, which tested reliably at 0.3–0.9 s per page. Before re-enabling Cache Components, preview on Workers and check that repeated requests and link clicks show members, events and forms.
 - Admin is request-rendered and never shares cached authenticated data.
 - Build output (`.open-next/`, `.wrangler/`) is git-ignored.
 

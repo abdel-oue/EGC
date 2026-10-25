@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "@/components/Link";
+import Link from "next/link";
 import Carousel from "@/components/Carousel";
 import HudButton from "@/components/HudButton";
 import { games } from "@/lib/site";

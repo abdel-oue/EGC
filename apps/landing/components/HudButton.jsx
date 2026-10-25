@@ -1,4 +1,4 @@
-import Link from "@/components/Link";
+import Link from "next/link";
 
 // Chamfered call-to-action link. variant: "accent" | "night" | "outline".
 const variants = {

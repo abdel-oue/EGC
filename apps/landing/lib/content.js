@@ -1,11 +1,11 @@
 import "server-only";
-import { cacheLife } from "next/cache";
+import { cache } from "react";
 import { connection } from "next/server";
 import { publicClient } from "@egc/shared/supabase.js";
 import initialContent from "@egc/shared/initial-content.json";
 
 export async function getContent(table) {
-  // Short-lived public data streams after the static shell, while database reads remain cached.
+  // Request-rendered on Workers; reads are deduplicated per request.
   await connection();
   return readContent(table);
 }
@@ -15,9 +15,7 @@ export async function getEventResults(eventId) {
   return readEventResults(eventId);
 }
 
-async function readEventResults(eventId) {
-  "use cache";
-  cacheLife({ stale: 0, revalidate: 30, expire: 60 });
+const readEventResults = cache(async (eventId) => {
   const client = publicClient();
 
   if (!client) {
@@ -35,11 +33,9 @@ async function readEventResults(eventId) {
   }
 
   return { participants: participants.data || [], matches: matches.data || [] };
-}
+});
 
-async function readContent(table) {
-  "use cache";
-  cacheLife({ stale: 0, revalidate: 30, expire: 60 });
+const readContent = cache(async (table) => {
   const client = publicClient();
 
   if (!client) {
@@ -79,4 +75,4 @@ async function readContent(table) {
   }));
 
   return { rows, unavailable: false };
-}
+});

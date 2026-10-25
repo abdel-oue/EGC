@@ -17,7 +17,7 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "https://pkg.pr.new/@opennextjs/cloudflare@1318",
+    "@opennextjs/cloudflare": "^1.20.13",
     "wrangler": "^4.152.0"
   }
 }

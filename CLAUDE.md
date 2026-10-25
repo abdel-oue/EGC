@@ -16,7 +16,7 @@ Use the shared theme: off-white #F5F3EF, Night #0E0E10, Burnt Orange #E35205, Gr
 
 All public UI text belongs in both shared dictionaries. French comes first; English is its translation. Admin UI labels belong in the shared admin dictionary. Use original member photos and actual club media; identify promotions as such.
 
-Landing uses Cache Components. Short-lived public database reads stream after `connection()` and cache for at most 60 seconds. Keep request hooks under Suspense boundaries. Admin is request-rendered and never shares cached authenticated data. Use the installed guides for `next/root-params`, `generateStaticParams`, `cacheLife`, proxy, auth and Server Actions.
+Landing is request-rendered on Cloudflare Workers with Cache Components disabled: the OpenNext adapter does not yet resume Cache Components/PPR content reliably, which left pages half-rendered. Public database reads run after `connection()` and are deduplicated per request with React `cache`. Keep request hooks under Suspense boundaries. Re-enable Cache Components only after a preview on Workers shows streamed content on repeated requests and client navigation. Admin is request-rendered and never shares cached authenticated data. Use the installed guides for `next/root-params`, `generateStaticParams`, `cacheLife`, proxy, auth and Server Actions.
 
 Use migrations for all schema changes. RLS protects every data table. Public visitors may read published content and submit through validated RPC functions; only active staff can read submissions or modify content. Only administrators manage staff. The service secret is server-only and used only after admin authorization.
 

@@ -11,8 +11,7 @@ const nextConfig = {
     "/media/*": ["../../packages/shared/preview-media/**/*"],
   },
   /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  cacheComponents: false,
   turbopack: {
     root: workspaceRoot,
     rules: {

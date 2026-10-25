@@ -26,6 +26,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Valorant Skirmish 2v2 (31 October 2026, 20:00) with open registrations.
 
 ### Fixed
+- Landing pages no longer hang or render empty on Cloudflare Workers, and links navigate correctly.
 - Member portraits are visible to the public again.
 - Instagram, Discord and Twitch links, with a Discord icon matching the other social icons.
 

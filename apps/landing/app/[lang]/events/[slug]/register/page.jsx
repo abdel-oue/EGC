@@ -39,10 +39,20 @@ export default async function RegistrationPage({ params }) {
     notFound();
   }
 
+  const rules = localized(event, "rules", locale).split("\n").map((rule) => rule.trim()).filter(Boolean);
+
   return (
     <main>
       <PageHeader ghost={dict.content.signup} title={localized(event, "title", locale)} intro={dict.content.signup} />
-      <div className="mx-auto max-w-3xl px-6 pb-24">
+      <div className="mx-auto max-w-3xl space-y-10 px-6 pb-24">
+        {rules.length > 0 && (
+          <section aria-labelledby="rules" className="border border-line bg-panel p-6 sm:p-10">
+            <h2 id="rules" className="mb-4 font-display text-2xl font-bold uppercase">{dict.content.rulesTitle}</h2>
+            <ol className="list-inside list-decimal space-y-2">
+              {rules.map((rule, index) => <li key={index}>{rule}</li>)}
+            </ol>
+          </section>
+        )}
         {registrationOpen(event) ? (
           <SubmissionForm action={registerEvent.bind(null, event.id)} locale={locale} labels={dict.content} rankLabels={dict.register.ranks} event={event} />
         ) : <p role="status">{dict.content.closed}</p>}

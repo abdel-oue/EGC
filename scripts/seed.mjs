@@ -57,17 +57,30 @@ const events = french.season.items.map((item, index) => ({
   registration_enabled: false,
 }));
 events.push({
-  slug: "valorant-skirmish-24-octobre-2026",
+  slug: "valorant-skirmish-2v2-31-octobre-2026",
   title_fr: "Tournoi Valorant — Skirmish 2v2",
   title_en: "Valorant tournament — Skirmish 2v2",
-  description_fr: "Samedi 24 octobre. Horaire et modalités à confirmer avant publication. Diffusion Twitch.",
-  description_en: "Saturday 24 October. Time and details must be confirmed before publication. Twitch broadcast.",
-  starts_at: "2026-10-24T18:00:00+01:00",
+  description_fr: "Tournoi Valorant en équipes de deux joueurs, sans remplaçant. Début samedi 31 octobre à 20:00. Diffusion sur Twitch.",
+  description_en: "Valorant tournament for teams of two players, no substitutes. Starts Saturday 31 October at 20:00. Streamed on Twitch.",
+  rules_fr: [
+    "Aucune triche : logiciels tiers, exploits et partage de compte sont interdits.",
+    "Respect et fair-play envers tous les joueurs et les organisateurs.",
+    "Chaque équipe compte exactement deux joueurs, sans remplaçant.",
+    "Les décisions des organisateurs sont définitives.",
+  ].join("\n"),
+  rules_en: [
+    "No cheating: third-party software, exploits and account sharing are forbidden.",
+    "Respect and fair play towards all players and organizers.",
+    "Each team has exactly two players, no substitutes.",
+    "Organizers' decisions are final.",
+  ].join("\n"),
+  starts_at: "2026-10-31T20:00:00+01:00",
   game: "valorant",
-  status: "draft",
+  status: "published",
   entry_type: "team",
   player_count: 2,
-  registration_enabled: false,
+  substitute_count: 0,
+  registration_enabled: true,
 });
 for (const event of events) {
   check(await client.from("events").upsert(event, { onConflict: "slug", ignoreDuplicates: true }));

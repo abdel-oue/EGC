@@ -23,7 +23,7 @@ export default async function EventsPage({ searchParams }) {
   return (
     <main>
       <PageHeader {...dict.pages.events} />
-      <Season dict={dict} game={game} />
+      <Season dict={dict} game={game} showPast />
     </main>
   );
 }

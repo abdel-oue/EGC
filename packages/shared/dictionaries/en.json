@@ -281,6 +281,19 @@
     "location": "Location",
     "date": "Date",
     "riotId": "Riot ID (Name#TAG)",
-    "website": "Website"
+    "website": "Website",
+    "format": "Format",
+    "pastEvent": "This event is over.",
+    "rulesTitle": "Rules",
+    "participants": "Participants",
+    "noParticipants": "Participants will appear here once the staff approves registrations.",
+    "bracket": "Bracket",
+    "noBracket": "The bracket will be published before the tournament starts.",
+    "round": "Round",
+    "final": "Final",
+    "tbd": "To be decided",
+    "bye": "Bye",
+    "allEvents": "See all events",
+    "past": "Past events"
   }
 }

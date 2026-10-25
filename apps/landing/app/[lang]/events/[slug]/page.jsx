@@ -6,7 +6,9 @@ import { registrationOpen } from "@egc/shared/validation.js";
 import { publicClient } from "@egc/shared/supabase.js";
 import PageHeader from "@/components/PageHeader";
 import HudButton from "@/components/HudButton";
-import { getContent } from "@/lib/content";
+import Bracket from "@/components/Bracket";
+import { upcomingEvents } from "@/components/Season";
+import { getContent, getEventResults } from "@/lib/content";
 import { alternates } from "@/lib/seo";
 import { getDictionary } from "../../dictionaries";
 
@@ -50,15 +52,59 @@ export default async function EventPage({ params }) {
     notFound();
   }
 
+  const { participants, matches } = await getEventResults(event.id);
+  const names = new Map(participants.map((entry) => [entry.id, entry.team_name || entry.players[0]]));
+  const rules = localized(event, "rules", locale).split("\n").map((rule) => rule.trim()).filter(Boolean);
+  const past = !(await upcomingEvents([event])).length;
+  const labels = dict.content;
+
   return (
     <main>
       <PageHeader ghost={dict.nav.events} title={localized(event, "title", locale)} intro={eventDate(event.starts_at, locale)} />
-      <article className="mx-auto max-w-4xl space-y-8 px-6 pb-24">
-        <p className="whitespace-pre-line text-lg">{localized(event, "description", locale)}</p>
-        <p>{dict.content.location} : {event.location}</p>
-        {registrationOpen(event) ? (
-          <HudButton href={`/${locale}/events/${slug}/register`}>{dict.content.signup}</HudButton>
-        ) : <p>{dict.content.closed}</p>}
+      <article className="mx-auto max-w-5xl space-y-14 px-6 pb-24">
+        <div className="space-y-6">
+          <p className="whitespace-pre-line text-lg">{localized(event, "description", locale)}</p>
+          <dl className="grid gap-4 sm:grid-cols-3">
+            <div><dt className="font-bold">{labels.date}</dt><dd>{eventDate(event.starts_at, locale)}</dd></div>
+            <div><dt className="font-bold">{labels.location}</dt><dd>{event.location}</dd></div>
+            <div>
+              <dt className="font-bold">{labels.format}</dt>
+              <dd>{event.entry_type === "team" ? `${labels.teamFormat} · ${event.player_count}v${event.player_count}` : labels.individualFormat}</dd>
+            </div>
+          </dl>
+          {registrationOpen(event) ? (
+            <HudButton href={`/${locale}/events/${slug}/register`}>{labels.signup}</HudButton>
+          ) : <p>{past ? labels.pastEvent : labels.closed}</p>}
+        </div>
+        {rules.length > 0 && (
+          <section aria-labelledby="rules">
+            <h2 id="rules" className="mb-6 font-display text-3xl font-bold uppercase">{labels.rulesTitle}</h2>
+            <ol className="list-inside list-decimal space-y-2 border border-line bg-panel p-6">
+              {rules.map((rule, index) => <li key={index}>{rule}</li>)}
+            </ol>
+          </section>
+        )}
+        <section aria-labelledby="participants">
+          <h2 id="participants" className="mb-6 font-display text-3xl font-bold uppercase">
+            {labels.participants} ({participants.length})
+          </h2>
+          {participants.length ? (
+            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {participants.map((entry) => (
+                <li key={entry.id} className="border border-line bg-offwhite p-4">
+                  {entry.team_name && <p className="font-display text-lg font-bold">{entry.team_name}</p>}
+                  <p className="text-night/70">{entry.players.join(" · ")}</p>
+                </li>
+              ))}
+            </ul>
+          ) : <p className="border border-line bg-panel p-6">{labels.noParticipants}</p>}
+        </section>
+        <section aria-labelledby="bracket">
+          <h2 id="bracket" className="mb-6 font-display text-3xl font-bold uppercase">{labels.bracket}</h2>
+          {matches.length ? (
+            <Bracket matches={matches} names={names} labels={labels} />
+          ) : <p className="border border-line bg-panel p-6">{labels.noBracket}</p>}
+        </section>
       </article>
     </main>
   );

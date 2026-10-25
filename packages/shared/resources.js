@@ -10,6 +10,8 @@ export const resources = {
       ["title_en", "text"],
       ["description_fr", "textarea"],
       ["description_en", "textarea"],
+      ["rules_fr", "textarea"],
+      ["rules_en", "textarea"],
       ["starts_at", "datetime-local", true],
       ["location", "text", true],
       ["status", "select", true, ["draft", "published", "archived"]],

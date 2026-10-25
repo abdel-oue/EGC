@@ -88,6 +88,8 @@
   "next": "Page suivante",
   "previous": "Page précédente",
   "options": {
+    "0": "Centré",
+    "90": "Vers le bas",
     "new": "Nouveau",
     "in-progress": "En traitement",
     "resolved": "Résolu",
@@ -108,8 +110,22 @@
     "league": "League of Legends",
     "fc": "EA Sports FC",
     "-100": "Vers le haut (+)",
-    "-80": "Vers le haut",
-    "0": "Centré",
-    "90": "Vers le bas"
-  }
+    "-80": "Vers le haut"
+  },
+  "rules_fr": "Règlement en français (une règle par ligne)",
+  "rules_en": "Règlement en anglais (une règle par ligne)",
+  "bracket": "Tableau du tournoi",
+  "bracketNote": "Élimination directe à partir des inscriptions approuvées. Les équipes sont tirées au sort ; les places vides avancent automatiquement.",
+  "generate": "Générer le tableau",
+  "regenerate": "Régénérer le tableau (efface les résultats)",
+  "confirmRegenerate": "Je confirme vouloir effacer le tableau actuel",
+  "approvedEntries": "Inscriptions approuvées",
+  "round": "Tour",
+  "final": "Finale",
+  "winner": "Vainqueur",
+  "setWinner": "Valider",
+  "tbd": "À déterminer",
+  "bye": "Qualifié d’office",
+  "notEnough": "Il faut au moins deux inscriptions approuvées.",
+  "generated": "Tableau généré."
 }

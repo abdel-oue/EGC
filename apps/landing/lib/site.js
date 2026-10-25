@@ -1,10 +1,9 @@
 export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-// TODO: replace "#" with the real invite / profile links, and set the club email.
 export const socials = {
-  instagram: "https://www.instagram.com/esisagamingclub",
-  discord: "#",
-  linkedin: "#",
+  instagram: "https://www.instagram.com/esisa.gaming.club/",
+  discord: "https://discord.gg/U2pkqEQQ5f",
+  twitch: "https://www.twitch.tv/esisa_gaming_club",
 };
 export const email = "";
 

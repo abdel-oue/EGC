@@ -18,9 +18,9 @@ export default async function Home() {
   return (
     <main>
       <Hero lang={locale} dict={dict} />
+      <Season dict={dict} limit={3} />
       <About dict={dict} />
       <Steps dict={dict} />
-      <Season dict={dict} />
       <Faq dict={dict} />
     </main>
   );

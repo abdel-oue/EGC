@@ -10,6 +10,33 @@ export async function getContent(table) {
   return readContent(table);
 }
 
+export async function getEventResults(eventId) {
+  await connection();
+  return readEventResults(eventId);
+}
+
+async function readEventResults(eventId) {
+  "use cache";
+  cacheLife({ stale: 0, revalidate: 30, expire: 60 });
+  const client = publicClient();
+
+  if (!client) {
+    return { participants: [], matches: [] };
+  }
+
+  const [participants, matches] = await Promise.all([
+    client.rpc("event_participants", { target_event: eventId }),
+    client.from("event_matches").select("id,round,position,team_a,team_b,winner")
+      .eq("event_id", eventId).order("round").order("position"),
+  ]);
+
+  if (participants.error || matches.error) {
+    console.error("Event results unavailable:", participants.error?.code || matches.error?.code);
+  }
+
+  return { participants: participants.data || [], matches: matches.data || [] };
+}
+
 async function readContent(table) {
   "use cache";
   cacheLife({ stale: 0, revalidate: 30, expire: 60 });

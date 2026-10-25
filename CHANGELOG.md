@@ -20,6 +20,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Staff content management, submission review, invitations, and an activity journal.
 - Cloudflare Workers deployment for the landing and admin apps as two separate Workers.
 - Project manual in `docs/`: local development, environment and secrets, git workflow, deployment, database and content.
+- Upcoming events on the home page, and past events on the events page.
+- Event pages show the rules, approved participants (team and in-game names only) and the tournament bracket.
+- Staff can generate single-elimination brackets and record match winners from the admin app.
+- Valorant Skirmish 2v2 (31 October 2026, 20:00) with open registrations.
+
+### Fixed
+- Member portraits are visible to the public again.
+- Instagram, Discord and Twitch links, with a Discord icon matching the other social icons.
 
 ### Changed
 - French opens by default regardless of browser language; English remains available.

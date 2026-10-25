@@ -281,6 +281,19 @@
     "location": "Lieu",
     "date": "Date",
     "riotId": "Riot ID (Pseudo#TAG)",
-    "website": "Site web"
+    "website": "Site web",
+    "format": "Format",
+    "pastEvent": "Cet événement est terminé.",
+    "rulesTitle": "Règlement",
+    "participants": "Participants",
+    "noParticipants": "Les participants apparaîtront ici une fois les inscriptions validées par le bureau.",
+    "bracket": "Tableau",
+    "noBracket": "Le tableau sera publié avant le début du tournoi.",
+    "round": "Tour",
+    "final": "Finale",
+    "tbd": "À déterminer",
+    "bye": "Qualifié d’office",
+    "allEvents": "Voir tous les événements",
+    "past": "Événements passés"
   }
 }

@@ -3,6 +3,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { resources, submissions, validateResource } from "@egc/shared/resources.js";
+import { createBracket, setWinner } from "@egc/shared/bracket.js";
 import { casablancaDateTime } from "@egc/shared/dates.js";
 import { requireStaff } from "@/lib/auth";
 
@@ -124,6 +125,73 @@ export async function updateSubmission(kind, id, _previous, form) {
   }
 
   revalidatePath(`/submissions/${kind}`);
+  return { success: "saved" };
+}
+
+export async function generateBracket(eventId, _previous, form) {
+  const { client } = await requireStaff();
+  const [{ data: entries, error }, { count, error: countError }] = await Promise.all([
+    client.from("event_registrations").select("id").eq("event_id", eventId).eq("status", "approved"),
+    client.from("event_matches").select("id", { count: "exact", head: true }).eq("event_id", eventId),
+  ]);
+
+  if (error || countError) {
+    return { error: "error" };
+  }
+
+  if (entries.length < 2) {
+    return { error: "notEnough" };
+  }
+
+  if (count && form.get("confirm") !== "on") {
+    return { error: "confirmRegenerate" };
+  }
+
+  const matches = createBracket(entries.map((entry) => entry.id))
+    .map((match) => ({ ...match, event_id: eventId }));
+  const { error: deleteError } = await client.from("event_matches").delete().eq("event_id", eventId);
+  const { error: insertError } = deleteError
+    ? { error: deleteError }
+    : await client.from("event_matches").insert(matches);
+
+  if (insertError) {
+    return { error: "error" };
+  }
+
+  revalidatePath(`/brackets/${eventId}`);
+  return { success: "generated" };
+}
+
+export async function saveMatchWinner(eventId, round, position, _previous, form) {
+  const { client } = await requireStaff();
+  const { data: matches, error } = await client.from("event_matches").select("*").eq("event_id", eventId);
+
+  if (error) {
+    return { error: "error" };
+  }
+
+  let updated;
+
+  try {
+    updated = setWinner(matches, round, position, String(form.get("winner") || ""));
+  } catch {
+    return { error: "error" };
+  }
+
+  const changed = updated.filter((match, index) => ["team_a", "team_b", "winner"]
+    .some((key) => match[key] !== matches[index][key]));
+
+  for (const match of changed) {
+    const { error: updateError } = await client.from("event_matches")
+      .update({ team_a: match.team_a, team_b: match.team_b, winner: match.winner })
+      .eq("id", match.id).select("id").single();
+
+    if (updateError) {
+      return { error: "error" };
+    }
+  }
+
+  revalidatePath(`/brackets/${eventId}`);
   return { success: "saved" };
 }
 

@@ -1,11 +1,18 @@
-import { readFile, writeFile, mkdir, copyFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import sharp from "sharp";
 
 const root = path.resolve(import.meta.dirname, "..");
 const source = path.join(root, "structure/Insta/team-members");
 const content = JSON.parse(await readFile(path.join(source, "content.json"), "utf8"));
 const output = path.join(root, "packages/shared/preview-media");
 await mkdir(output, { recursive: true });
+
+// Web-sized WebP copies keep pages light; originals stay in structure/.
+function toWebp(input, file, width) {
+  return sharp(input).rotate().resize({ width, withoutEnlargement: true })
+    .webp({ quality: 80 }).toFile(path.join(output, file));
+}
 
 const englishRoles = [
   "President", "Vice President", "Treasurer", "Secretary",
@@ -15,8 +22,8 @@ const englishRoles = [
 const members = [];
 
 for (const slide of content.slides.filter((item) => item.type === "member")) {
-  const filename = `${slide.id}.jpeg`;
-  await copyFile(path.join(source, slide.member.photo), path.join(output, filename));
+  const filename = `${slide.id}.webp`;
+  await toWebp(path.join(source, slide.member.photo), filename, 900);
   members.push({
     id: slide.id,
     name: slide.member.name,
@@ -35,17 +42,14 @@ const media = [
     game: "valorant",
     caption_fr: "Tournoi Valorant — Skirmish 2v2",
     caption_en: "Valorant tournament — Skirmish 2v2",
-    image_path: "valorant-october.png",
+    image_path: "valorant-october.webp",
     kind: "promotion",
     sort_order: 0,
     visible: true,
   },
 ];
 
-await copyFile(
-  path.join(root, "structure/Insta/Valorant-24-10/valorant-landscape-white.png"),
-  path.join(output, media[0].image_path)
-);
+await toWebp(path.join(root, "structure/Insta/Valorant-24-10/valorant-landscape-white.png"), media[0].image_path, 1600);
 
 await writeFile(
   path.join(root, "packages/shared/initial-content.json"),

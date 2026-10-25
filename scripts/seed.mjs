@@ -35,7 +35,7 @@ for (const [table, rows] of [["members", content.members], ["gallery_media", con
 
     const file = await readFile(path.join(root, "packages/shared/preview-media", row.image_path));
     check(await client.storage.from("club-media").upload(row.image_path, file, {
-      contentType: row.image_path.endsWith(".png") ? "image/png" : "image/jpeg",
+      contentType: "image/webp",
       upsert: false,
     }).then((result) => Number(result.error?.statusCode) === 409 ? { error: null } : result));
     check(await client.from(table).insert(row));

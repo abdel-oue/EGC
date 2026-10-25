@@ -5,7 +5,7 @@
       "name": "OUEDGHIRI Abdelaziz",
       "role_fr": "Président",
       "role_en": "President",
-      "image_path": "ouedghiri-abdelaziz.jpeg",
+      "image_path": "ouedghiri-abdelaziz.webp",
       "photo_offset_y": 0,
       "sort_order": 0,
       "visible": true
@@ -15,7 +15,7 @@
       "name": "LOUTAOUI Adam",
       "role_fr": "Vice-président",
       "role_en": "Vice President",
-      "image_path": "loutaoui-adam.jpeg",
+      "image_path": "loutaoui-adam.webp",
       "photo_offset_y": 0,
       "sort_order": 1,
       "visible": true
@@ -25,7 +25,7 @@
       "name": "BASSIM Rayan",
       "role_fr": "Trésorier",
       "role_en": "Treasurer",
-      "image_path": "bassim-rayan.jpeg",
+      "image_path": "bassim-rayan.webp",
       "photo_offset_y": 0,
       "sort_order": 2,
       "visible": true
@@ -35,7 +35,7 @@
       "name": "IDRISSI KAITOUNI Mehdi",
       "role_fr": "Secrétaire",
       "role_en": "Secretary",
-      "image_path": "idrissi-kaitouni-mehdi.jpeg",
+      "image_path": "idrissi-kaitouni-mehdi.webp",
       "photo_offset_y": -80,
       "sort_order": 3,
       "visible": true
@@ -45,7 +45,7 @@
       "name": "ARAYANE Nabil",
       "role_fr": "Responsable communication & contenu",
       "role_en": "Communications & Content Lead",
-      "image_path": "arayane-nabil.jpeg",
+      "image_path": "arayane-nabil.webp",
       "photo_offset_y": 0,
       "sort_order": 4,
       "visible": true
@@ -55,7 +55,7 @@
       "name": "EL KERRAZ Saad",
       "role_fr": "Responsable logistique",
       "role_en": "Logistics Lead",
-      "image_path": "el-kerraz-saad.jpeg",
+      "image_path": "el-kerraz-saad.webp",
       "photo_offset_y": 90,
       "sort_order": 5,
       "visible": true
@@ -65,7 +65,7 @@
       "name": "ESSALHI Ilyass",
       "role_fr": "Responsable Minecraft",
       "role_en": "Minecraft Lead",
-      "image_path": "essalhi-ilyass.jpeg",
+      "image_path": "essalhi-ilyass.webp",
       "photo_offset_y": 0,
       "sort_order": 6,
       "visible": true
@@ -75,7 +75,7 @@
       "name": "FAZGHOUN Yassmine",
       "role_fr": "Chargée des opérations",
       "role_en": "Operations Officer",
-      "image_path": "fazghoun-yassmine.jpeg",
+      "image_path": "fazghoun-yassmine.webp",
       "photo_offset_y": -100,
       "sort_order": 7,
       "visible": true
@@ -85,7 +85,7 @@
       "name": "LACHKAR Yasser",
       "role_fr": "Chargé des opérations",
       "role_en": "Operations Officer",
-      "image_path": "lachkar-yasser.jpeg",
+      "image_path": "lachkar-yasser.webp",
       "photo_offset_y": 0,
       "sort_order": 8,
       "visible": true
@@ -95,7 +95,7 @@
       "name": "SQUALLI Omar",
       "role_fr": "Chargé des opérations",
       "role_en": "Operations Officer",
-      "image_path": "squalli-omar.jpeg",
+      "image_path": "squalli-omar.webp",
       "photo_offset_y": 0,
       "sort_order": 9,
       "visible": true
@@ -107,7 +107,7 @@
       "game": "valorant",
       "caption_fr": "Tournoi Valorant — Skirmish 2v2",
       "caption_en": "Valorant tournament — Skirmish 2v2",
-      "image_path": "valorant-october.png",
+      "image_path": "valorant-october.webp",
       "kind": "promotion",
       "sort_order": 0,
       "visible": true

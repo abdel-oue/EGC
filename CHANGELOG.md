@@ -28,6 +28,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Standings rank teams by their players' average rank and separate the top seeds (byes) from the play-in teams.
 - Brackets are seeded by rank (seed 1 meets the lowest seed) instead of drawn at random, and show play-in, quarterfinal, semifinal and final rounds.
 - Staff can pin a team's seed before generating the bracket.
+- Events can list cash prizes per place, shown on the Info and Bracket tabs.
+- Redesigned dark tournament bracket with connector lines; play-in matches sit next to the match they feed.
+- Stream asset list with generation prompts in `docs/stream-assets.md`.
 - Rules can be grouped into titled sections; a detailed Skirmish 2v2 rulebook draft is in `docs/valorant-skirmish-rules.md`.
 
 ### Fixed

@@ -12,6 +12,7 @@ export const resources = {
       ["description_en", "textarea"],
       ["rules_fr", "textarea"],
       ["rules_en", "textarea"],
+      ["prizes", "textarea"],
       ["starts_at", "datetime-local", true],
       ["location", "text", true],
       ["status", "select", true, ["draft", "published", "archived"]],

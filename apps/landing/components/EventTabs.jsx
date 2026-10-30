@@ -29,7 +29,7 @@ export default function EventTabs({ tabs, label }) {
             aria-selected={active === tab.id}
             aria-controls={`panel-${tab.id}`}
             onClick={() => open(tab.id)}
-            className={`-mb-px shrink-0 border-b-4 px-4 py-3 font-display font-bold uppercase transition-colors ${active === tab.id ? "border-accent text-accent" : "border-transparent text-night/60 hover:text-night"}`}
+            className={`shrink-0 border-b-4 px-4 py-3 font-display font-bold uppercase transition-colors ${active === tab.id ? "border-accent text-accent" : "border-transparent text-night/60 hover:text-night"}`}
           >
             {tab.label}
           </button>

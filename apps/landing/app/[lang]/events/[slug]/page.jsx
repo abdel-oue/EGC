@@ -11,6 +11,7 @@ import Bracket from "@/components/Bracket";
 import EventTabs from "@/components/EventTabs";
 import Standings from "@/components/Standings";
 import Rules, { ruleSections } from "@/components/Rules";
+import Prizes from "@/components/Prizes";
 import { upcomingEvents } from "@/components/Season";
 import { getContent, getEventResults } from "@/lib/content";
 import { alternates } from "@/lib/seo";
@@ -78,6 +79,7 @@ export default async function EventPage({ params }) {
               <dd>{event.entry_type === "team" ? `${labels.teamFormat} · ${event.player_count}v${event.player_count}` : labels.individualFormat}</dd>
             </div>
           </dl>
+          <Prizes text={event.prizes || ""} labels={labels} />
           {registrationOpen(event) ? (
             <HudButton href={`/${locale}/events/${slug}/register`}>{labels.signup}</HudButton>
           ) : <p>{past ? labels.pastEvent : labels.closed}</p>}
@@ -94,9 +96,14 @@ export default async function EventPage({ params }) {
     {
       id: "bracket",
       label: labels.tabBracket,
-      content: matches.length
-        ? <Bracket matches={matches} names={names} seeds={seeds} labels={labels} />
-        : <p className="border border-line bg-panel p-6">{labels.noBracket}</p>,
+      content: (
+        <div className="space-y-8">
+          <Prizes text={event.prizes || ""} labels={labels} />
+          {matches.length
+            ? <Bracket matches={matches} names={names} seeds={seeds} labels={labels} />
+            : <p className="border border-line bg-panel p-6">{labels.noBracket}</p>}
+        </div>
+      ),
     },
   ];
 

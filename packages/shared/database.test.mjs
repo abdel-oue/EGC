@@ -23,7 +23,7 @@ test("migrations, submission functions, permissions, media visibility and audit 
       grant execute on function auth.uid() to anon, authenticated;
     `);
 
-    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql"]) {
+    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql"]) {
       await db.exec(await readFile(new URL(`../../supabase/migrations/${name}`, import.meta.url), "utf8"));
 
       if (name === "20261022000000_team_registrations.sql") {

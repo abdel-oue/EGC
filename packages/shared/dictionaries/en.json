@@ -310,6 +310,13 @@
     "standingsNote": "Ranked by the starting players’ average rank, then best player and registration order. Staff may adjust seeds before publishing the bracket.",
     "playIn": "Play-in",
     "quarterfinals": "Quarterfinals",
-    "semifinals": "Semifinals"
+    "semifinals": "Semifinals",
+    "prizesTitle": "Prize pool",
+    "places": [
+      "Winner",
+      "Runner-up",
+      "3rd place",
+      "4th place"
+    ]
   }
 }

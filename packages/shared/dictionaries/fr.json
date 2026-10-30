@@ -310,6 +310,13 @@
     "standingsNote": "Classement par rang moyen des joueurs titulaires, puis par meilleur joueur et ordre d’inscription. Le bureau peut ajuster les têtes de série avant de publier le tableau.",
     "playIn": "Play-in",
     "quarterfinals": "Quarts de finale",
-    "semifinals": "Demi-finales"
+    "semifinals": "Demi-finales",
+    "prizesTitle": "Cashprize",
+    "places": [
+      "Vainqueur",
+      "Finaliste",
+      "3e place",
+      "4e place"
+    ]
   }
 }

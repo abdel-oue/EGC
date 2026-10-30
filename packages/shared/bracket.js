@@ -1,17 +1,58 @@
-// Single elimination: every round is created up front, byes advance automatically.
-export function createBracket(entryIds, random = Math.random) {
-  const entries = [...entryIds];
+import { ranks } from "./validation.js";
 
-  for (let index = entries.length - 1; index > 0; index -= 1) {
-    const swap = Math.floor(random() * (index + 1));
-    [entries[index], entries[swap]] = [entries[swap], entries[index]];
+// Starting players' rank tiers, Iron = 1 … Radiant = 9. Unknown ranks are ignored.
+export function teamRating(players = []) {
+  const tiers = players
+    .filter((player) => !player.sub && ranks.includes(player.rank))
+    .map((player) => ranks.indexOf(player.rank) + 1);
+
+  return {
+    average: tiers.length ? tiers.reduce((sum, tier) => sum + tier, 0) / tiers.length : 0,
+    best: Math.max(0, ...tiers),
+  };
+}
+
+// Strongest first: average rank, then best player, then registration order.
+// Staff-assigned seeds keep their slot; everyone else fills the gaps in rating order.
+export function seedEntries(entries) {
+  const slots = new Array(entries.length).fill(null);
+  const rest = [];
+
+  entries.forEach((entry, index) => {
+    const rated = { ...entry, index, rating: teamRating(entry.players) };
+
+    if (entry.seed >= 1 && entry.seed <= entries.length && !slots[entry.seed - 1]) {
+      slots[entry.seed - 1] = rated;
+    } else {
+      rest.push(rated);
+    }
+  });
+
+  rest.sort((a, b) => b.rating.average - a.rating.average || b.rating.best - a.rating.best || a.index - b.index);
+  return slots.map((slot) => slot || rest.shift());
+}
+
+// Seed order of a standard draw: [1, 16, 8, 9, 4, 13, …] for 16 slots, so seed 1 meets the last seed.
+function drawOrder(size) {
+  let order = [1];
+
+  while (order.length < size) {
+    const next = order.length * 2 + 1;
+    order = order.flatMap((seed) => [seed, next - seed]);
   }
 
-  if (entries.length < 2) {
+  return order;
+}
+
+// Single elimination from entries listed strongest first: the top seeds get the byes,
+// every round is created up front and byes advance automatically.
+export function createBracket(entryIds) {
+  if (entryIds.length < 2) {
     return [];
   }
 
-  const rounds = Math.ceil(Math.log2(entries.length));
+  const rounds = Math.ceil(Math.log2(entryIds.length));
+  const order = drawOrder(2 ** rounds);
   const matches = [];
 
   for (let round = 1; round <= rounds; round += 1) {
@@ -20,11 +61,12 @@ export function createBracket(entryIds, random = Math.random) {
     }
   }
 
-  // Every first-round match gets a team_a, so byes never leave a match empty.
+  // The better seed is always team_a and always exists, so byes only leave team_b empty.
   const first = matches.filter((match) => match.round === 1);
 
-  entries.forEach((entry, index) => {
-    first[index % first.length][index < first.length ? "team_a" : "team_b"] = entry;
+  first.forEach((match, index) => {
+    match.team_a = entryIds[order[index * 2] - 1];
+    match.team_b = entryIds[order[index * 2 + 1] - 1] ?? null;
   });
 
   for (const match of first) {

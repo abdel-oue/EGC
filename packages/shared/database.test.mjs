@@ -23,7 +23,7 @@ test("migrations, submission functions, permissions, media visibility and audit 
       grant execute on function auth.uid() to anon, authenticated;
     `);
 
-    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql"]) {
+    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql"]) {
       await db.exec(await readFile(new URL(`../../supabase/migrations/${name}`, import.meta.url), "utf8"));
 
       if (name === "20261022000000_team_registrations.sql") {
@@ -115,6 +115,8 @@ test("migrations, submission functions, permissions, media visibility and audit 
     const participants = (await db.query("select * from event_participants('10000000-0000-0000-0000-000000000001')")).rows;
     assert.deepEqual(participants.map(({ team_name, players }) => ({ team_name, players })),
       [{ team_name: "Duo", players: ["Player1#EGC", "Player2#EGC"] }]);
+    assert.deepEqual(participants[0].roster[1], { handle: "Player2#EGC", rank: "gold", sub: false });
+    assert.equal(participants[0].seed, null);
     assert.ok(!("email" in participants[0]));
     await assert.rejects(db.query("insert into event_matches (event_id, round, position) values ('10000000-0000-0000-0000-000000000001', 1, 0)"));
   } finally {

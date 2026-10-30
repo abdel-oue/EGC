@@ -3,7 +3,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { resources, submissions, validateResource } from "@egc/shared/resources.js";
-import { createBracket, setWinner } from "@egc/shared/bracket.js";
+import { createBracket, seedEntries, setWinner } from "@egc/shared/bracket.js";
 import { casablancaDateTime } from "@egc/shared/dates.js";
 import { requireStaff } from "@/lib/auth";
 
@@ -131,7 +131,7 @@ export async function updateSubmission(kind, id, _previous, form) {
 export async function generateBracket(eventId, _previous, form) {
   const { client } = await requireStaff();
   const [{ data: entries, error }, { count, error: countError }] = await Promise.all([
-    client.from("event_registrations").select("id").eq("event_id", eventId).eq("status", "approved"),
+    client.from("event_registrations").select("id,players,seed").eq("event_id", eventId).eq("status", "approved").order("created_at"),
     client.from("event_matches").select("id", { count: "exact", head: true }).eq("event_id", eventId),
   ]);
 
@@ -147,7 +147,7 @@ export async function generateBracket(eventId, _previous, form) {
     return { error: "confirmRegenerate" };
   }
 
-  const matches = createBracket(entries.map((entry) => entry.id))
+  const matches = createBracket(seedEntries(entries).map((entry) => entry.id))
     .map((match) => ({ ...match, event_id: eventId }));
   const { error: deleteError } = await client.from("event_matches").delete().eq("event_id", eventId);
   const { error: insertError } = deleteError
@@ -160,6 +160,39 @@ export async function generateBracket(eventId, _previous, form) {
 
   revalidatePath(`/brackets/${eventId}`);
   return { success: "generated" };
+}
+
+// Empty fields return an entry to automatic seeding; set ones must be unique within 1…entries.
+export async function saveSeeds(eventId, _previous, form) {
+  const { client } = await requireStaff();
+  const { data: entries, error } = await client.from("event_registrations")
+    .select("id,seed").eq("event_id", eventId).eq("status", "approved");
+
+  if (error) {
+    return { error: "error" };
+  }
+
+  const seeds = entries.map((entry) => {
+    const value = String(form.get(`seed_${entry.id}`) || "").trim();
+    return { ...entry, next: value ? Number(value) : null };
+  });
+  const used = seeds.map((entry) => entry.next).filter((seed) => seed !== null);
+
+  if (used.some((seed) => !Number.isInteger(seed) || seed < 1 || seed > entries.length) || new Set(used).size !== used.length) {
+    return { error: "invalidSeeds" };
+  }
+
+  for (const entry of seeds.filter((item) => item.next !== item.seed)) {
+    const { error: updateError } = await client.from("event_registrations")
+      .update({ seed: entry.next }).eq("id", entry.id).select("id").single();
+
+    if (updateError) {
+      return { error: "error" };
+    }
+  }
+
+  revalidatePath(`/brackets/${eventId}`);
+  return { success: "saved" };
 }
 
 export async function saveMatchWinner(eventId, round, position, _previous, form) {

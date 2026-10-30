@@ -294,6 +294,22 @@
     "tbd": "À déterminer",
     "bye": "Qualifié d’office",
     "allEvents": "Voir tous les événements",
-    "past": "Événements passés"
+    "past": "Événements passés",
+    "sections": "Sections de l’événement",
+    "tabInfo": "Infos",
+    "tabStandings": "Classement",
+    "tabBracket": "Tableau",
+    "tabRules": "Règlement",
+    "seed": "Tête de série",
+    "averageRank": "Rang moyen",
+    "unranked": "Non classé",
+    "byeTitle": "Qualifiés d’office",
+    "byeIntro": "Les équipes les mieux classées passent directement au tour suivant.",
+    "playInTitle": "Play-in",
+    "playInIntro": "Ces équipes s’affrontent pour rejoindre les têtes de série au tour suivant.",
+    "standingsNote": "Classement par rang moyen des joueurs titulaires, puis par meilleur joueur et ordre d’inscription. Le bureau peut ajuster les têtes de série avant de publier le tableau.",
+    "playIn": "Play-in",
+    "quarterfinals": "Quarts de finale",
+    "semifinals": "Demi-finales"
   }
 }

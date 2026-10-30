@@ -294,6 +294,22 @@
     "tbd": "To be decided",
     "bye": "Bye",
     "allEvents": "See all events",
-    "past": "Past events"
+    "past": "Past events",
+    "sections": "Event sections",
+    "tabInfo": "Info",
+    "tabStandings": "Standings",
+    "tabBracket": "Bracket",
+    "tabRules": "Rules",
+    "seed": "Seed",
+    "averageRank": "Average rank",
+    "unranked": "Unranked",
+    "byeTitle": "Byes",
+    "byeIntro": "The highest-ranked teams go straight to the next round.",
+    "playInTitle": "Play-in",
+    "playInIntro": "These teams play for a spot against the top seeds in the next round.",
+    "standingsNote": "Ranked by the starting players’ average rank, then best player and registration order. Staff may adjust seeds before publishing the bracket.",
+    "playIn": "Play-in",
+    "quarterfinals": "Quarterfinals",
+    "semifinals": "Semifinals"
   }
 }

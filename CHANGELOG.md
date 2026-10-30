@@ -24,6 +24,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Event pages show the rules, approved participants (team and in-game names only) and the tournament bracket.
 - Staff can generate single-elimination brackets and record match winners from the admin app.
 - Valorant Skirmish 2v2 (31 October 2026, 20:00) with open registrations.
+- Event pages are split into Info, Standings, Bracket and Rules tabs, each with its own shareable link.
+- Standings rank teams by their players' average rank and separate the top seeds (byes) from the play-in teams.
+- Brackets are seeded by rank (seed 1 meets the lowest seed) instead of drawn at random, and show play-in, quarterfinal, semifinal and final rounds.
+- Staff can pin a team's seed before generating the bracket.
+- Rules can be grouped into titled sections; a detailed Skirmish 2v2 rulebook draft is in `docs/valorant-skirmish-rules.md`.
 
 ### Fixed
 - Landing pages no longer hang or render empty on Cloudflare Workers, and links navigate correctly.

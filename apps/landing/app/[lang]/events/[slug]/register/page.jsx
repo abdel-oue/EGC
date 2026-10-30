@@ -5,6 +5,7 @@ import { localized } from "@egc/shared/i18n.js";
 import { registrationOpen } from "@egc/shared/validation.js";
 import PageHeader from "@/components/PageHeader";
 import SubmissionForm from "@/components/SubmissionForm";
+import Rules, { ruleSections } from "@/components/Rules";
 import { getContent } from "@/lib/content";
 import { registerEvent } from "@/lib/submissions";
 import { alternates } from "@/lib/seo";
@@ -46,11 +47,9 @@ export default async function RegistrationPage({ params }) {
       <PageHeader ghost={dict.content.signup} title={localized(event, "title", locale)} intro={dict.content.signup} />
       <div className="mx-auto max-w-3xl space-y-10 px-6 pb-24">
         {rules.length > 0 && (
-          <section aria-labelledby="rules" className="border border-line bg-panel p-6 sm:p-10">
+          <section aria-labelledby="rules">
             <h2 id="rules" className="mb-4 font-display text-2xl font-bold uppercase">{dict.content.rulesTitle}</h2>
-            <ol className="list-inside list-decimal space-y-2">
-              {rules.map((rule, index) => <li key={index}>{rule}</li>)}
-            </ol>
+            <Rules sections={rules} />
           </section>
         )}
         {registrationOpen(event) ? (

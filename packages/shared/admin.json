@@ -112,10 +112,10 @@
     "-100": "Vers le haut (+)",
     "-80": "Vers le haut"
   },
-  "rules_fr": "Règlement en français (une règle par ligne)",
-  "rules_en": "Règlement en anglais (une règle par ligne)",
+  "rules_fr": "Règlement en français (une règle par ligne, « # Titre » pour commencer une section)",
+  "rules_en": "Règlement en anglais (une règle par ligne, « # Title » pour commencer une section)",
   "bracket": "Tableau du tournoi",
-  "bracketNote": "Élimination directe à partir des inscriptions approuvées. Les équipes sont tirées au sort ; les places vides avancent automatiquement.",
+  "bracketNote": "Élimination directe à partir des inscriptions approuvées. Les équipes sont classées par rang moyen des titulaires (puis meilleur joueur, puis ordre d’inscription) ; les mieux classées sont qualifiées d’office. Fixe une tête de série pour forcer une place, puis régénère le tableau.",
   "generate": "Générer le tableau",
   "regenerate": "Régénérer le tableau (efface les résultats)",
   "confirmRegenerate": "Je confirme vouloir effacer le tableau actuel",
@@ -127,5 +127,10 @@
   "tbd": "À déterminer",
   "bye": "Qualifié d’office",
   "notEnough": "Il faut au moins deux inscriptions approuvées.",
-  "generated": "Tableau généré."
+  "generated": "Tableau généré.",
+  "seeds": "Têtes de série",
+  "seedHint": "Vide = automatique",
+  "saveSeeds": "Enregistrer les têtes de série",
+  "invalidSeeds": "Chaque tête de série doit être un nombre unique entre 1 et le nombre d’équipes.",
+  "averageRank": "Rang moyen"
 }

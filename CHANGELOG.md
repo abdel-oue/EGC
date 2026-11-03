@@ -32,6 +32,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Redesigned dark tournament bracket with connector lines; play-in matches sit next to the match they feed.
 - Stream asset list with generation prompts in `docs/stream-assets.md`.
 - Rules can be grouped into titled sections; a detailed Skirmish 2v2 rulebook draft is in `docs/valorant-skirmish-rules.md`.
+- Forms page with online forms; staff review responses and open or close each form from the admin app.
+- First form: application to represent EGC on FIFA at the K-Otaku Gaming Expo (21 November 2026).
 
 ### Fixed
 - Landing pages no longer hang or render empty on Cloudflare Workers, and links navigate correctly.

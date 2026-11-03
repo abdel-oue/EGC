@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { validateContact, validateEventRegistration, registrationOpen } from "./validation.js";
+import { validateContact, validateEventRegistration, validateForm, formOpen, registrationOpen } from "./validation.js";
 import { validateResource } from "./resources.js";
 import { casablancaDateTime, dateTimeInput } from "./dates.js";
 
@@ -33,6 +33,40 @@ function registration(event, includeSubstitute = false) {
 
   return form;
 }
+
+test("forms normalize phones, enforce required fields and options, and respect closing", () => {
+  const definition = {
+    id: "form",
+    status: "published",
+    closes_at: "2026-11-21T00:00:00+01:00",
+    fields: [
+      { name: "whatsapp", type: "phone", required: true },
+      { name: "platform", type: "choice", required: true, options: [{ value: "ps5" }] },
+      { name: "school", type: "text", required: false },
+      { name: "consent", type: "consent", required: true },
+    ],
+  };
+  const form = new FormData();
+  form.set("whatsapp", "00212 6-12.34(56)78");
+  form.set("platform", "ps5");
+  form.set("consent", "on");
+  form.set("locale", "en");
+  const { data, errors } = validateForm(form, definition, now);
+  assert.deepEqual(errors, {});
+  assert.deepEqual(data, { form_id: "form", locale: "en", answers: { whatsapp: "+212612345678", platform: "ps5", consent: true } });
+
+  form.set("whatsapp", "0612345678");
+  form.set("platform", "switch");
+  form.delete("consent");
+  assert.deepEqual(Object.keys(validateForm(form, definition, now).errors), ["whatsapp", "platform", "consent"]);
+
+  const after = Date.parse("2026-11-21T00:00:00+01:00");
+  assert.equal(formOpen(definition, now), true);
+  assert.equal(formOpen(definition, after), false);
+  assert.deepEqual(validateForm(form, definition, after).errors, { form: "closed" });
+  assert.equal(formOpen({ ...definition, status: "archived" }, now), false);
+  assert.equal(formOpen(null, now), false);
+});
 
 test("contact validates input, normalizes email and bounds message size", () => {
   const form = new FormData();

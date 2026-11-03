@@ -14,9 +14,9 @@ export default async function SubmissionList({ params, searchParams }) {
   }
 
   const { client } = await requireStaff();
-  const { q = "", status = "", event = "", page = "1" } = await searchParams;
+  const { q = "", status = "", parent = "", page = "1" } = await searchParams;
   const pageNumber = Math.max(1, Math.min(10000, Number.parseInt(page, 10) || 1));
-  const searchField = kind === "legacy" ? "captain_email" : "email";
+  const searchField = config.searchField || "email";
   let query = client.from(config.table).select("*", { count: "exact" })
     .order("created_at", { ascending: false }).order("id")
     .range((pageNumber - 1) * 30, pageNumber * 30 - 1);
@@ -29,15 +29,15 @@ export default async function SubmissionList({ params, searchParams }) {
     query = query.eq("status", status);
   }
 
-  if (kind === "registrations" && /^[0-9a-f-]{36}$/i.test(event)) {
-    query = query.eq("event_id", event);
+  if (config.parent && /^[0-9a-f-]{36}$/i.test(parent)) {
+    query = query.eq(config.parent.column, parent);
   }
 
   const { data: rows, count, error } = await query;
-  const { data: events } = kind === "registrations"
-    ? await client.from("events").select("id,title_fr").order("starts_at")
+  const { data: parents } = config.parent
+    ? await client.from(config.parent.table).select("id,title_fr").order(config.parent.order)
     : { data: [] };
-  const filters = new URLSearchParams({ q, status, event });
+  const filters = new URLSearchParams({ q, status, parent });
 
   return (
     <>
@@ -45,7 +45,7 @@ export default async function SubmissionList({ params, searchParams }) {
       {kind === "legacy" && <p className="mb-6">{t.legacyNote}</p>}
       <form className="mb-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <label>
-          <span className="mb-2 block">{t.email}</span>
+          <span className="mb-2 block">{t[searchField]}</span>
           <input name="q" defaultValue={q} maxLength={120} />
         </label>
         <label>
@@ -55,12 +55,12 @@ export default async function SubmissionList({ params, searchParams }) {
             {config.statuses.map((value) => <option key={value} value={value}>{t.options[value]}</option>)}
           </select>
         </label>
-        {kind === "registrations" && (
+        {config.parent && (
           <label>
-            <span className="mb-2 block">{t.events}</span>
-            <select name="event" defaultValue={event}>
+            <span className="mb-2 block">{t[config.parent.table]}</span>
+            <select name="parent" defaultValue={parent}>
               <option value="">{t.all}</option>
-              {events?.map((item) => <option key={item.id} value={item.id}>{item.title_fr}</option>)}
+              {parents?.map((item) => <option key={item.id} value={item.id}>{item.title_fr}</option>)}
             </select>
           </label>
         )}
@@ -72,10 +72,10 @@ export default async function SubmissionList({ params, searchParams }) {
         {rows?.map((row) => (
           <li key={row.id} className="flex flex-wrap items-center justify-between gap-5 bg-panel p-5">
             <div>
-              <p className="break-all font-bold">{row.subject || row.team_name || row.name}</p>
+              <p className="break-all font-bold">{row.subject || row.team_name || row.name || row.answers?.name}</p>
               <p className="break-all">{row[searchField]}</p>
               <p className="text-sm">{eventDate(row.created_at)} · {t.options[row.status]}</p>
-              {row.event_id && <p className="text-sm">{events?.find((item) => item.id === row.event_id)?.title_fr}</p>}
+              {config.parent && <p className="text-sm">{parents?.find((item) => item.id === row[config.parent.column])?.title_fr}</p>}
             </div>
             <Link href={`/submissions/${kind}/${row.id}`} className="font-bold text-accent underline">{t.details}</Link>
           </li>

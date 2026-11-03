@@ -44,7 +44,7 @@ const readContent = cache(async (table) => {
 
     return {
       rows: rows.map((row) => ({ ...row, image_url: `/media/${row.image_path}` })),
-      unavailable: table === "events",
+      unavailable: table === "events" || table === "forms",
     };
   }
 
@@ -52,6 +52,8 @@ const readContent = cache(async (table) => {
 
   if (table === "events") {
     query = query.eq("status", "published").order("starts_at");
+  } else if (table === "forms") {
+    query = query.eq("status", "published").order("created_at", { ascending: false });
   } else {
     query = query.eq("visible", true).order("sort_order");
   }

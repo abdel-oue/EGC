@@ -23,7 +23,7 @@ test("migrations, submission functions, permissions, media visibility and audit 
       grant execute on function auth.uid() to anon, authenticated;
     `);
 
-    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql"]) {
+    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql", "20261103000000_forms.sql"]) {
       await db.exec(await readFile(new URL(`../../supabase/migrations/${name}`, import.meta.url), "utf8"));
 
       if (name === "20261022000000_team_registrations.sql") {
@@ -119,6 +119,35 @@ test("migrations, submission functions, permissions, media visibility and audit 
     assert.equal(participants[0].seed, null);
     assert.ok(!("email" in participants[0]));
     await assert.rejects(db.query("insert into event_matches (event_id, round, position) values ('10000000-0000-0000-0000-000000000001', 1, 0)"));
+
+    const [form] = (await db.query("select * from forms")).rows;
+    assert.equal(form.slug, "representant-fifa-k-otaku-2026");
+    const answers = {
+      name: "Player One", whatsapp: "+212612345678", availability: "tbc", edition: "EA SPORTS FC 26",
+      platform: "ps5", level: "Division 3", motivation: "Pour le club", consent: true, injected: "dropped",
+    };
+    const submit = (changes) => db.query("select submit_form($1::jsonb)", [JSON.stringify({ form_id: form.id, locale: "fr", answers: { ...answers, ...changes } })]);
+    await submit({});
+    await assert.rejects(submit({}), { code: "23505" });
+    await assert.rejects(submit({ whatsapp: "0612345678" }), { code: "22023" });
+    await assert.rejects(submit({ whatsapp: "+212612345679", platform: "switch" }), { code: "22023" });
+    await assert.rejects(submit({ whatsapp: "+212612345679", motivation: " " }), { code: "22023" });
+    await assert.rejects(submit({ whatsapp: "+212612345679", consent: false }), { code: "22023" });
+    await assert.rejects(submit({ whatsapp: "+212612345679", name: "x".repeat(201) }), { code: "22023" });
+    assert.equal((await db.query("select * from form_responses")).rows.length, 0);
+
+    await db.exec("reset role; update forms set closes_at = now() - interval '1 minute'; set role anon;");
+    await assert.rejects(submit({ whatsapp: "+212612345679" }), { code: "P0002" });
+    await db.exec("reset role; update forms set closes_at = null, status = 'archived'; set role anon;");
+    assert.equal((await db.query("select * from forms")).rows.length, 0);
+    await assert.rejects(submit({ whatsapp: "+212612345679" }), { code: "P0002" });
+
+    await db.exec("reset role; set role authenticated; set request.jwt.claim.sub = '00000000-0000-0000-0000-000000000001';");
+    const responses = (await db.query("select * from form_responses")).rows;
+    assert.equal(responses.length, 1);
+    assert.equal(responses[0].contact, "+212612345678");
+    assert.ok(!("injected" in responses[0].answers));
+    assert.equal((await db.query("update form_responses set status = 'approved' returning id")).rows.length, 1);
   } finally {
     await db.close();
   }

@@ -9,7 +9,7 @@
     linear-gradient(145deg, transparent 80%, rgb(227 82 5 / 0.15) 80%, transparent 80.3%);
 }
 
-input:not([type="checkbox"]), textarea, select {
+input:not([type="checkbox"], [type="radio"]), textarea, select {
   width: 100%;
   border: 1px solid var(--color-line);
   background: var(--color-offwhite);

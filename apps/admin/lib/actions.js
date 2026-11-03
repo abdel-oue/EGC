@@ -44,7 +44,7 @@ export async function saveContent(resource, id, _previous, form) {
   const { client } = await requireStaff();
   const config = resources[resource];
 
-  if (!config) {
+  if (!config || (config.noCreate && !id)) {
     return { error: "error" };
   }
 

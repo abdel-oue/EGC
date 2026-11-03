@@ -45,6 +45,55 @@ export function registrationOpen(event, now = Date.now()) {
   );
 }
 
+export const formLimits = { text: 200, textarea: 5000 };
+const phonePattern = /^\+[1-9]\d{7,14}$/;
+
+export function formOpen(definition, now = Date.now()) {
+  return Boolean(
+    definition && definition.status === "published" &&
+    (!definition.closes_at || new Date(definition.closes_at).getTime() > now)
+  );
+}
+
+export function validateForm(form, definition, now = Date.now()) {
+  if (!formOpen(definition, now)) {
+    return { data: null, errors: { form: "closed" } };
+  }
+
+  const errors = {};
+  const answers = {};
+
+  for (const { name, type, required, options } of definition.fields) {
+    const value = type === "phone"
+      ? text(form, name).replace(/[\s().-]/g, "").replace(/^00/, "+")
+      : text(form, name);
+
+    if (!value) {
+      if (required) {
+        errors[name] = "invalid";
+      }
+
+      continue;
+    }
+
+    const valid = type === "phone" ? phonePattern.test(value)
+      : type === "choice" ? options.some((option) => option.value === value)
+      : type === "consent" ? value === "on"
+      : value.length <= formLimits[type];
+
+    if (!valid) {
+      errors[name] = "invalid";
+    }
+
+    answers[name] = type === "consent" ? value === "on" : value;
+  }
+
+  return {
+    data: { form_id: definition.id, answers, locale: text(form, "locale") === "en" ? "en" : "fr" },
+    errors,
+  };
+}
+
 export function validateEventRegistration(form, event, now = Date.now()) {
   const errors = {};
 

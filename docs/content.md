@@ -10,7 +10,13 @@ Contact messages use new/in-progress/resolved; registrations use pending/approve
 
 Images accept JPEG, PNG, or WebP up to 8 MiB. Uploads require active staff; the server checks size, MIME type, and file signatures. Storage is private. Anonymous users can obtain signed URLs only for visible members or visible gallery media whose associated event is published. Existing signed URLs can remain usable for up to one hour after unpublishing; database visibility changes appear on the next page load. Unchanged open pages need a navigation or reload to show edits. Do not use club media storage for confidential attachments.
 
-Content editing includes publishing/archiving events, opening/closing registrations, reordering/hiding members, portrait framing presets, uploading/reordering/hiding gallery media, and associating media with games or events. Staff can search content titles/names, filter submissions by email/status/event, and page through lists. Contact replies happen outside the app. Recruitment applications, payments, and email message alerts are deferred.
+Content editing includes publishing/archiving events, opening/closing registrations, reordering/hiding members, portrait framing presets, uploading/reordering/hiding gallery media, and associating media with games or events. Staff can search content titles/names, filter submissions by email/status/event, and page through lists. Contact replies happen outside the app. Payments and email message alerts are deferred.
+
+## Forms
+
+`/forms` lists published forms and `/forms/[slug]` renders one. A form is a row in `forms`: translated title, description and post-submit message, status, optional closing date, and a `fields` list. Field types are `text`, `textarea`, `phone`, `choice` and `consent`. To add a form, write a migration that inserts a row (see `20261103000000_forms.sql`); no code change is needed. The field `name` is shown as the response's title in the admin list, and the first `phone` field limits a form to one response per number.
+
+`submit_form` checks answers against `fields` in the database, drops unknown answers, and normalized phone numbers must start with the country code. Staff change wording, status and closing date under “Formulaires”, and review responses under “Réponses aux formulaires” (pending/approved/rejected). Question lists are not editable in the admin app. Only published forms are public: archiving hides a form and its link, while a passed closing date keeps it listed as closed.
 
 ## Rules, participants and brackets
 

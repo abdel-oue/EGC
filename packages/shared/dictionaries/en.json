@@ -10,6 +10,7 @@
     "members": "Members",
     "gallery": "Gallery",
     "join": "Join",
+    "forms": "Forms",
     "contact": "Contact",
     "menu": "Menu",
     "follow": "Follow us",
@@ -131,6 +132,17 @@
     ]
   },
   "pages": {
+    "forms": {
+      "ghost": "Ready",
+      "title": "Forms",
+      "intro": "Applications and requests opened by the club. Pick a form and fill it in online.",
+      "emptyTitle": "No forms right now",
+      "emptyText": "The club's next forms will appear here.",
+      "fill": "Fill in the form",
+      "closed": "This form is closed.",
+      "duplicate": "A response with this number already exists for this form.",
+      "back": "Back to forms"
+    },
     "events": {
       "ghost": "Agenda",
       "title": "Events",

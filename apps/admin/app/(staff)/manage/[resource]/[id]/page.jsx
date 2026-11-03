@@ -10,7 +10,7 @@ export default async function EditContent({ params }) {
   const { resource, id } = await params;
   const config = resources[resource];
 
-  if (!config) {
+  if (!config || (config.noCreate && id === "new")) {
     notFound();
   }
 

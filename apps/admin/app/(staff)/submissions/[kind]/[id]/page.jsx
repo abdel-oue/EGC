@@ -25,17 +25,29 @@ export default async function SubmissionDetail({ params }) {
     notFound();
   }
 
-  const { data: event } = row.event_id
-    ? await client.from("events").select("title_fr").eq("id", row.event_id).maybeSingle()
+  const { data: parent } = config.parent
+    ? await client.from(config.parent.table).select("*").eq("id", row[config.parent.column]).maybeSingle()
     : { data: null };
+
+  function answerText(field) {
+    const value = row.answers[field.name];
+    const option = field.options?.find((item) => item.value === value);
+    return value === true ? t.yes : option?.label_fr ?? value ?? "—";
+  }
 
   return (
     <>
       <Link href={`/submissions/${kind}`} className="mb-6 block underline">{t.back}</Link>
       <h1 className="mb-8 font-display text-3xl font-bold uppercase">{t[kind]}</h1>
-      {event && <p className="mb-6 font-bold">{event.title_fr}</p>}
+      {parent && <p className="mb-6 font-bold">{parent.title_fr}</p>}
       <dl className="mb-10 grid max-w-4xl gap-5 border border-line bg-panel p-6">
-        {Object.entries(row).filter(([key]) => key !== "status").map(([key, value]) => (
+        {row.answers && parent?.fields.map((field) => (
+          <div key={field.name}>
+            <dt className="mb-1 font-bold">{field.label_fr}</dt>
+            <dd className="whitespace-pre-wrap break-words">{answerText(field)}</dd>
+          </div>
+        ))}
+        {Object.entries(row).filter(([key]) => key !== "status" && key !== "answers").map(([key, value]) => (
           <div key={key}>
             <dt className="mb-1 font-bold">{t[key] || key}</dt>
             <dd className="whitespace-pre-wrap break-words">

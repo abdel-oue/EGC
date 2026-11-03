@@ -10,6 +10,7 @@
     "members": "Membres",
     "gallery": "Galerie",
     "join": "Rejoindre",
+    "forms": "Formulaires",
     "contact": "Contact",
     "menu": "Menu",
     "follow": "Suis-nous",
@@ -131,6 +132,17 @@
     ]
   },
   "pages": {
+    "forms": {
+      "ghost": "Ready",
+      "title": "Formulaires",
+      "intro": "Candidatures et demandes ouvertes par le club. Choisis un formulaire et remplis-le en ligne.",
+      "emptyTitle": "Aucun formulaire pour le moment",
+      "emptyText": "Les prochains formulaires du club apparaîtront ici.",
+      "fill": "Remplir le formulaire",
+      "closed": "Ce formulaire est fermé.",
+      "duplicate": "Une réponse existe déjà avec ce numéro pour ce formulaire.",
+      "back": "Retour aux formulaires"
+    },
     "events": {
       "ghost": "Agenda",
       "title": "Événements",

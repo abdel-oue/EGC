@@ -4,7 +4,7 @@ import LangSwitch from "@/components/LangSwitch";
 import NavLinks from "@/components/NavLinks";
 import Socials from "@/components/Socials";
 
-const pages = ["events", "members", "gallery", "join", "contact"];
+const pages = ["events", "members", "gallery", "forms", "join", "contact"];
 
 // Fixed sidebar on desktop, sticky top bar with a <details> menu on mobile.
 export default function Sidebar({ lang, dict }) {

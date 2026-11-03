@@ -52,12 +52,38 @@ export const resources = {
     defaults: { kind: "photo", sort_order: 0, visible: false },
     image: true,
   },
+  // Question lists are defined in migrations; staff edit the wording around them and open or close the form.
+  forms: {
+    table: "forms",
+    fields: [
+      ["title_fr", "text", true],
+      ["title_en", "text"],
+      ["description_fr", "textarea"],
+      ["description_en", "textarea"],
+      ["success_fr", "textarea", true],
+      ["success_en", "textarea"],
+      ["status", "select", true, ["draft", "published", "archived"]],
+      ["closes_at", "datetime-local"],
+    ],
+    defaults: { status: "draft" },
+    noCreate: true,
+  },
 };
 
 export const submissions = {
   contacts: { table: "contact_messages", statuses: ["new", "in-progress", "resolved"] },
-  registrations: { table: "event_registrations", statuses: ["pending", "approved", "rejected"] },
-  legacy: { table: "team_registrations", statuses: ["pending", "approved", "rejected"] },
+  registrations: {
+    table: "event_registrations",
+    statuses: ["pending", "approved", "rejected"],
+    parent: { column: "event_id", table: "events", order: "starts_at" },
+  },
+  responses: {
+    table: "form_responses",
+    statuses: ["pending", "approved", "rejected"],
+    searchField: "contact",
+    parent: { column: "form_id", table: "forms", order: "created_at" },
+  },
+  legacy: { table: "team_registrations", statuses: ["pending", "approved", "rejected"], searchField: "captain_email" },
 };
 
 export function validateResource(resource, data) {

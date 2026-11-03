@@ -15,9 +15,9 @@ export default async function ContentList({ params, searchParams }) {
   const { client } = await requireStaff();
   const { q = "", page = "1" } = await searchParams;
   const pageNumber = Math.max(1, Math.min(10000, Number.parseInt(page, 10) || 1));
-  const titleField = resource === "events" ? "title_fr" : resource === "members" ? "name" : "caption_fr";
+  const titleField = ["events", "forms"].includes(resource) ? "title_fr" : resource === "members" ? "name" : "caption_fr";
   let query = client.from(config.table).select("*", { count: "exact" })
-    .order(resource === "events" ? "starts_at" : "sort_order").order("id")
+    .order(resource === "events" ? "starts_at" : resource === "forms" ? "created_at" : "sort_order").order("id")
     .range((pageNumber - 1) * 30, pageNumber * 30 - 1);
 
   if (q) {
@@ -30,7 +30,7 @@ export default async function ContentList({ params, searchParams }) {
     <>
       <div className="mb-8 flex items-center justify-between gap-5">
         <h1 className="font-display text-3xl font-bold uppercase">{t[resource]}</h1>
-        <Link href={`/manage/${resource}/new`} className="bg-accent px-5 py-3 font-bold text-offwhite">{t.new}</Link>
+        {!config.noCreate && <Link href={`/manage/${resource}/new`} className="bg-accent px-5 py-3 font-bold text-offwhite">{t.new}</Link>}
       </div>
       {resource === "events" && <p className="mb-6">{t.draftNote}</p>}
       <form className="mb-8 flex gap-3">

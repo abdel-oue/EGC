@@ -4,10 +4,12 @@ import { getContent } from "@/lib/content";
 
 export default async function sitemap() {
   const { rows } = await getContent("events");
+  const { rows: forms } = await getContent("forms");
   const routes = [
-    "", "/events", "/members", "/gallery", "/join", "/contact",
+    "", "/events", "/members", "/gallery", "/forms", "/join", "/contact",
     ...games.map((game) => `/games/${game.key}`),
     ...rows.map((event) => `/events/${event.slug}`),
+    ...forms.map((form) => `/forms/${form.slug}`),
   ];
 
   return routes.flatMap((route) => locales.map((locale) => ({

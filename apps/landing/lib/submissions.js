@@ -1,7 +1,7 @@
 "use server";
 
 import { publicClient } from "@egc/shared/supabase.js";
-import { validateContact, validateEventRegistration } from "@egc/shared/validation.js";
+import { validateContact, validateEventRegistration, validateForm } from "@egc/shared/validation.js";
 
 function result(error) {
   if (!error) {
@@ -30,6 +30,34 @@ export async function contact(_previous, form) {
   }
 
   const { error } = await client.rpc("submit_contact", { payload: data });
+  return result(error);
+}
+
+export async function submitForm(formId, _previous, form) {
+  if (form.get("website")) {
+    return { ok: true };
+  }
+
+  const client = publicClient();
+
+  if (!client) {
+    return { error: "unavailableForm" };
+  }
+
+  const { data: definition, error: readError } = await client.from("forms")
+    .select("*").eq("id", formId).maybeSingle();
+
+  if (readError) {
+    return { error: "server" };
+  }
+
+  const { data, errors } = validateForm(form, definition);
+
+  if (Object.keys(errors).length) {
+    return { error: errors.form || "formError", errors };
+  }
+
+  const { error } = await client.rpc("submit_form", { payload: data });
   return result(error);
 }
 

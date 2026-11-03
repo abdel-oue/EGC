@@ -9,10 +9,12 @@ export default async function StaffLayout({ children }) {
     ["/", "dashboard"],
     ["/submissions/contacts", "contacts"],
     ["/submissions/registrations", "registrations"],
+    ["/submissions/responses", "responses"],
     ["/submissions/legacy", "legacy"],
     ["/manage/events", "events"],
     ["/manage/members", "members"],
     ["/manage/gallery", "gallery"],
+    ["/manage/forms", "forms"],
     ["/activity", "activity"],
   ];
 

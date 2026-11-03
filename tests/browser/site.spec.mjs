@@ -90,6 +90,12 @@ test("contact reports unavailable backend without claiming success", async ({ pa
   await expect(page.getByLabel("Nom complet", { exact: true })).toHaveValue("Club Member");
 });
 
+test("forms page reports unavailable backend", async ({ page }) => {
+  await page.goto("/fr/forms");
+  await expect(page.getByRole("heading", { name: "Formulaires", level: 1 })).toBeVisible();
+  await expect(page.getByRole("status")).toHaveText("Le contenu est temporairement indisponible. Réessaie dans un instant.");
+});
+
 test("admin routes require authentication and are excluded from indexing", async ({ page, request }) => {
   await page.goto("http://localhost:3101/manage/events");
   await expect(page).toHaveURL(/\/login\?error=unavailable$/);

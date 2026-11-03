@@ -7,6 +7,7 @@ export default async function Dashboard() {
   const categories = [
     ["contacts", "contact_messages", "/submissions/contacts"],
     ["registrations", "event_registrations", "/submissions/registrations"],
+    ["responses", "form_responses", "/submissions/responses"],
     ["events", "events", "/manage/events"],
     ["members", "members", "/manage/members"],
   ];

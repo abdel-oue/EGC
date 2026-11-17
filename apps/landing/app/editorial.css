@@ -111,7 +111,7 @@
   }
 }
 
-/* Preserve the previous poster heights, adding exactly fifteen percent. */
+/* Keep the taller home posters on desktop. */
 .game-grid-compact {
   --home-poster-height: 340px;
 }
@@ -214,9 +214,6 @@
   .games-ticker-dark > .eyebrow {
     display: none;
   }
-  .game-grid-compact {
-    --home-poster-height: 380px;
-  }
   .ticker-group {
     gap: 24px;
     padding-inline: 12px;
@@ -235,9 +232,6 @@
   }
 }
 @media (max-width: 480px) {
-  .game-grid-compact {
-    --home-poster-height: 300px;
-  }
   .event-instagram {
     margin-left: 0;
     display: flex;
@@ -743,6 +737,9 @@
   background-size: 400% 100%;
   background-repeat: no-repeat;
   transition: transform 400ms ease;
+}
+.game-poster {
+  display: none;
 }
 .game-art-valorant {
   background-position: 0 50%;
@@ -1549,8 +1546,20 @@
     gap: 13px;
   }
   .game-card,
-  .game-grid-compact .game-card {
-    min-height: 380px;
+  .game-grid-compact .game-card,
+  .home-games .game-grid-compact .game-card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    min-height: 0;
+  }
+  .game-card .game-art {
+    background-image: none;
+  }
+  .game-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
   .game-card-copy .display,
   .game-grid-compact .game-card-copy .display {
@@ -1748,7 +1757,6 @@
   }
   .game-card,
   .game-grid-compact .game-card {
-    min-height: 300px;
     border-radius: 14px;
   }
   .game-card-copy,
@@ -1758,7 +1766,7 @@
   }
   .game-card-copy .display,
   .game-grid-compact .game-card-copy .display {
-    font-size: 27px;
+    font-size: clamp(21px, 6.3vw, 27px);
   }
   .game-card-copy .text-link {
     font-size: 12px;

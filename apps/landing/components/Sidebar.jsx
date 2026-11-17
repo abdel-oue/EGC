@@ -7,7 +7,7 @@ import { editorial } from "./editorial-copy";
 export default function Sidebar({ lang, dict }) {
   const t = editorial(lang);
   const links = [
-    { href: `/${lang}#about`, label: t.club },
+    { href: `/${lang}#top`, label: t.club },
     { href: `/${lang}/games`, label: t.games },
     { href: `/${lang}/events`, label: t.events },
     { href: `/${lang}/members`, label: t.members },

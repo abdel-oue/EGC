@@ -15,7 +15,16 @@ export default function GameCards({ locale = "fr", compact = false }) {
           <span
             className={`game-art game-art-${game.key}`}
             aria-hidden="true"
-          />
+          >
+            <svg
+              className="game-poster"
+              viewBox={`${index * 543} 0 543 724`}
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+            >
+              <image href="/design/games.webp" width="2172" height="724" />
+            </svg>
+          </span>
           <span className="game-number">0{index + 1}</span>
           <span className="game-arrow">
             <Arrow />

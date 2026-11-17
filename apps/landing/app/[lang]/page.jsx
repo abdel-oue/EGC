@@ -1,7 +1,7 @@
 import { lang } from "next/root-params";
 import Faq from "@/components/Faq";
 import Season from "@/components/Season";
-import Steps from "@/components/Steps";
+import { ClubCta } from "@/components/Editorial";
 import { alternates } from "@/lib/seo";
 import { getDictionary } from "./dictionaries";
 import Hero from "./_components/Hero";
@@ -19,9 +19,9 @@ export default async function Home() {
     <main>
       <Hero lang={locale} dict={dict} />
       <Season dict={dict} limit={3} />
-      <About dict={dict} />
-      <Steps dict={dict} />
-      <Faq dict={dict} />
+      <About dict={dict} locale={locale} />
+      <ClubCta locale={locale} />
+      <Faq dict={dict} locale={locale} compact />
     </main>
   );
 }

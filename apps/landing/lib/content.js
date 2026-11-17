@@ -3,6 +3,7 @@ import { cache } from "react";
 import { connection } from "next/server";
 import { publicClient } from "@egc/shared/supabase.js";
 import initialContent from "@egc/shared/initial-content.json";
+import pastEvents from "@egc/shared/past-events.json";
 
 export async function getContent(table) {
   // Request-rendered on Workers; reads are deduplicated per request.
@@ -39,12 +40,21 @@ const readContent = cache(async (table) => {
   const client = publicClient();
 
   if (!client) {
+    // Keep the club's existing published archive available in local preview.
+    // Configured environments always use the database query below; no archive
+    // snapshot is merged into live results or used for accepting registrations.
+    if (table === "events") {
+      return {
+        rows: [...pastEvents].sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at)),
+        unavailable: false,
+      };
+    }
     const rows = table === "members" ? initialContent.members
       : table === "gallery_media" ? initialContent.media : [];
 
     return {
       rows: rows.map((row) => ({ ...row, image_url: `/media/${row.image_path}` })),
-      unavailable: table === "events" || table === "forms",
+      unavailable: table === "forms",
     };
   }
 

@@ -1,31 +1,73 @@
 import Link from "next/link";
 import { eventDate, localized } from "@egc/shared/i18n.js";
 import { registrationOpen } from "@egc/shared/validation.js";
+import { games } from "@/lib/site";
+import { editorial } from "./editorial-copy";
+import { Arrow } from "./Editorial";
+import EventEmpty from "./EventEmpty";
 
-export default function EventList({ events, locale, labels, unavailable = false }) {
-  if (unavailable) {
-    return <p role="status">{labels.unavailable}</p>;
-  }
-
-  if (!events.length) {
-    return <p className="border border-line bg-panel p-8">{labels.emptyEvents}</p>;
-  }
-
+export default function EventList({
+  events,
+  locale,
+  labels,
+  unavailable = false,
+  past = false,
+}) {
+  if (unavailable || !events.length)
+    return (
+      <EventEmpty
+        locale={locale}
+        labels={labels}
+        past={past}
+        unavailable={unavailable}
+      />
+    );
+  const t = editorial(locale);
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="event-grid">
       {events.map((event) => (
-        <article key={event.id} className="brand-panel flex flex-col gap-5 border border-line bg-offwhite p-7">
-          <p className="text-sm font-bold text-accent">{eventDate(event.starts_at, locale)}</p>
-          <h3 className="font-display text-2xl font-bold uppercase">{localized(event, "title", locale)}</h3>
-          <p className="text-night/70">{event.location}</p>
-          <Link href={`/${locale}/events/${event.slug}`} className="mt-auto font-bold underline decoration-accent underline-offset-8">
-            {labels.details} <span aria-hidden="true">→</span>
-          </Link>
-          {registrationOpen(event) && (
-            <Link href={`/${locale}/events/${event.slug}/register`} className="self-start bg-accent px-5 py-3 font-bold text-offwhite">
-              {labels.signup}
-            </Link>
+        <article
+          key={event.id || event.slug}
+          className={`event-card event-card-${event.game || "club"}${past ? " event-card-past" : ""}`}
+        >
+          {!past && (
+            <div className="event-card-art" aria-hidden="true">
+              <span className={`game-art game-art-${event.game || "club"}`} />
+              <span className="event-badge">{t.upcoming}</span>
+            </div>
           )}
+          <div className="event-card-copy">
+            <div className="event-card-heading">
+              <p className="eyebrow accent">
+                {games.find((game) => game.key === event.game)?.name ||
+                  (/(^|-)2xko(-|$)/i.test(event.slug || "") ? "2XKO" : "EGC")}
+              </p>
+              {past && <span className="event-badge event-badge-inline">{t.ended}</span>}
+            </div>
+            <h3 className="display">{localized(event, "title", locale)}</h3>
+            <p className="event-meta">
+              <time dateTime={event.starts_at}>
+                {eventDate(event.starts_at, locale)}
+              </time>
+              {event.location && <span>{event.location}</span>}
+            </p>
+            <Link
+              href={`/${locale}/events/${event.slug}`}
+              className="text-link"
+            >
+              {past ? t.recap : labels.details}
+              <Arrow />
+            </Link>
+            {registrationOpen(event) && (
+              <Link
+                href={`/${locale}/events/${event.slug}/register`}
+                className="pill event-signup"
+              >
+                {labels.signup}
+                <Arrow />
+              </Link>
+            )}
+          </div>
         </article>
       ))}
     </div>

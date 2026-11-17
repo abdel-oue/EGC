@@ -1,88 +1,64 @@
 import Image from "next/image";
 import Link from "next/link";
-import Carousel from "@/components/Carousel";
-import HudButton from "@/components/HudButton";
-import { games } from "@/lib/site";
-import { floatDelays } from "@/lib/motion";
+import { Arrow, GamesBand } from "@/components/Editorial";
+import GameCards from "@/components/GameCards";
+import { editorial } from "@/components/editorial-copy";
 
-export default function Hero({ lang, dict }) {
-  const h = dict.hero;
-  const g = dict.games;
-
+export default function Hero({ lang }) {
+  const t = editorial(lang);
   return (
-    <section id="home" className="brand-panel relative isolate flex min-h-svh items-end overflow-clip px-4 pb-16 pt-24 sm:px-8 lg:px-12 lg:pt-32">
-      <Image
-        src="/brand/logo-icon-night.svg"
-        alt=""
-        aria-hidden="true"
-        width={640}
-        height={640}
-        priority
-        className="animate-drift pointer-events-none absolute -left-24 top-8 -z-10 h-auto w-[min(85vw,640px)] opacity-[0.06]"
-      />
-
-      <div className="mx-auto grid w-full max-w-6xl items-end gap-14 xl:grid-cols-2">
-        <div>
-          <p className="intro intro-1 mb-6 flex items-center gap-3 font-display text-xs font-bold uppercase tracking-[0.3em] text-accent">
-            <span className="animate-sweep h-px w-10 bg-accent" />
-            {h.kicker}
-          </p>
-          <h1 className="font-display font-bold uppercase leading-[0.95] tracking-tight">
-            <span className="intro intro-2 block text-3xl sm:text-4xl">{h.line1}</span>
-            <span className="intro intro-3 flex items-center gap-3 text-4xl sm:text-6xl">
-              {h.line2}
-              <span className="text-sm leading-tight text-accent sm:text-lg">
-                {h.side1}
-                <br />
-                {h.side2}
-              </span>
-            </span>
-            <span className="intro intro-4 block text-4xl sm:text-6xl">{h.line3}</span>
+    <>
+      <section id="home" className="home-hero site-width">
+        <span className="home-disk" aria-hidden="true" />
+        <span className="crosshair" aria-hidden="true" />
+        <div className="home-heading intro">
+          <p className="eyebrow">{t.homeEyebrow}</p>
+          <h1 className="display" aria-label={t.homeLines.join(" ")}>
+            <span>{t.homeLines[0]}</span>
+            <span className="accent">{t.homeLines[1]}</span>
           </h1>
-          <p className="intro intro-5 mt-6 text-lg text-night/60">{h.tagline}</p>
-          <div className="intro intro-6 mt-10 flex flex-wrap gap-4">
-            <HudButton href={`/${lang}/join`}>{h.cta}</HudButton>
-            <HudButton href="#season" variant="outline">
-              {h.secondary}
-            </HudButton>
+        </div>
+        <div className="hero-controller animate-drift" aria-hidden="true">
+          <Image
+            src="/design/controller.webp"
+            alt=""
+            fill
+            priority
+            sizes="(max-width: 700px) 95vw, 62vw"
+            className="object-contain"
+          />
+        </div>
+        <div className="hero-values eyebrow" aria-hidden="true">
+          {t.values.map((value) => (
+            <span key={value}>{value} /</span>
+          ))}
+        </div>
+        <div className="home-actions intro intro-3">
+          <p>{t.homeTagline}</p>
+          <div>
+            <Link className="pill" href={`/${lang}/join`}>
+              {t.joinClub}
+              <Arrow />
+            </Link>
+            <Link className="text-link" href="#games">
+              {t.discoverGames}
+              <Arrow down />
+            </Link>
           </div>
         </div>
-
-        <div id="games" className="intro intro-5 min-w-0 scroll-mt-24">
-          <Carousel
-            prevLabel={g.prev}
-            nextLabel={g.next}
-            heading={
-              <h2 className="font-display font-bold uppercase leading-none">
-                <span className="block text-xs tracking-[0.3em] text-accent">{g.kicker}</span>
-                <span className="text-4xl">{g.title}</span>
-              </h2>
-            }
-          >
-            {games.map((game, i) => (
-              <Link
-                key={game.key}
-                href={`/${lang}/games/${game.key}`}
-                className="chamfer shine group relative flex h-80 w-56 shrink-0 snap-start flex-col justify-between overflow-clip border border-line bg-panel p-5 text-night transition-transform duration-500 hover:-translate-y-2"
-              >
-                <span aria-hidden="true" className="absolute -right-10 top-0 h-full w-20 skew-x-[-20deg] border-l-2 border-accent bg-night/5 transition-transform duration-500 group-hover:translate-x-4" />
-                <span aria-hidden="true" className="absolute right-14 top-0 h-full w-5 skew-x-[-20deg] bg-night/5 transition-transform duration-500 group-hover:-translate-x-2" />
-                <span className="relative font-display text-xs font-bold tracking-[0.3em] text-night/50">0{i + 1}</span>
-                <span className="relative mx-auto transition-transform duration-500 group-hover:scale-110">
-                  <Image src={`/brand/games/${game.key}.svg`} alt="" width={144} height={144} className={`animate-float size-36 ${floatDelays[i % floatDelays.length]}`} />
-                </span>
-                <span className="relative">
-                  <span className="block font-display text-lg font-bold uppercase leading-tight">{game.name}</span>
-                  <span className="mt-3 flex items-center justify-between border-t border-night/15 pt-3 text-xs font-bold uppercase tracking-wider text-night/70 transition-colors group-hover:text-accent">
-                    {g.join}
-                    <span aria-hidden="true">→</span>
-                  </span>
-                </span>
-              </Link>
-            ))}
-          </Carousel>
+      </section>
+      <GamesBand locale={lang} label />
+      <section id="games" className="home-games site-width">
+        <div className="section-heading">
+          <p className="eyebrow">01 / {t.games}</p>
+          <h2 className="display">{t.gamesSection}</h2>
+          <Link href={`/${lang}/games`} className="text-link">
+            {t.games}
+            <Arrow />
+          </Link>
         </div>
-      </div>
-    </section>
+        <GameCards locale={lang} compact />
+      </section>
+    </>
   );
 }

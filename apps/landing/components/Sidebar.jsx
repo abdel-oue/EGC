@@ -1,50 +1,62 @@
-import Image from "next/image";
 import Link from "next/link";
 import LangSwitch from "@/components/LangSwitch";
 import NavLinks from "@/components/NavLinks";
-import Socials from "@/components/Socials";
-
-const pages = ["events", "members", "gallery", "forms", "join", "contact"];
-
-// Fixed sidebar on desktop, sticky top bar with a <details> menu on mobile.
+import HomeLink from "@/components/HomeLink";
+import { Arrow, Wordmark } from "./Editorial";
+import { editorial } from "./editorial-copy";
 export default function Sidebar({ lang, dict }) {
+  const t = editorial(lang);
   const links = [
-    { href: `/${lang}`, label: dict.nav.home },
-    ...pages.map((page) => ({ href: `/${lang}/${page}`, label: dict.nav[page] })),
+    { href: `/${lang}#about`, label: t.club },
+    { href: `/${lang}/games`, label: t.games },
+    { href: `/${lang}/events`, label: t.events },
+    { href: `/${lang}/members`, label: t.members },
   ];
-
   return (
     <>
-      {/* Desktop */}
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col overflow-y-auto bg-night text-offwhite lg:flex">
-        <Link href={`/${lang}`} className="block border-b border-offwhite/10 px-6 py-6">
-          <Image src="/brand/logo-full.svg" alt="ESISA Gaming Club" width={200} height={83} priority className="h-auto w-full" />
-        </Link>
-        <nav aria-label={dict.nav.label} className="flex-1 py-4">
-          <NavLinks links={links} variant="desktop" />
-        </nav>
-        <div className="px-6 pb-8">
-          <p className="mb-3 font-display text-xs font-bold uppercase tracking-[0.3em] text-offwhite/30">{dict.nav.follow}</p>
-          <Socials />
-        </div>
-      </aside>
-
-      {/* Mobile */}
-      <header className="sticky top-0 z-40 flex items-center justify-between gap-3 bg-night px-4 py-3 text-offwhite lg:hidden">
-        <Link href={`/${lang}`} aria-label="ESISA Gaming Club">
-          <Image src="/brand/logo-icon.svg" alt="" width={40} height={40} priority />
-        </Link>
-        <div className="flex items-center gap-2">
-          <LangSwitch label={dict.nav.language} className="text-offwhite" />
-          <details className="group">
-            <summary className="chamfer-sm cursor-pointer list-none bg-accent px-4 py-2 font-display text-sm font-bold uppercase [&::-webkit-details-marker]:hidden">
-              {dict.nav.menu}
-            </summary>
-            <nav aria-label={dict.nav.label} className="absolute inset-x-0 top-full max-h-[calc(100svh-4rem)] overflow-y-auto bg-night shadow-xl">
-              <NavLinks links={links} variant="mobile" />
-              <Socials className="px-6 py-4" />
-            </nav>
-          </details>
+      <a className="skip-link" href="#main-content">
+        {t.skip}
+      </a>
+      <div className="announcement">
+        <span>ESISA Gaming Club · Fès</span>
+        <LangSwitch label={dict.nav.language} className="locale-switch" />
+      </div>
+      <header className="site-header">
+        <div className="nav-inner site-width">
+          <HomeLink locale={lang}>
+            <Wordmark />
+          </HomeLink>
+          <nav className="desktop-nav" aria-label={dict.nav.label}>
+            <NavLinks links={links} variant="desktop" />
+          </nav>
+          <div className="nav-actions">
+            <Link className="pill nav-join" href={`/${lang}/join`}>
+              {t.join}
+              <Arrow />
+            </Link>
+            <details className="mobile-menu">
+              <summary aria-label={dict.nav.menu}>
+                <svg
+                  className="state-icon menu-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  aria-hidden="true"
+                >
+                  <path d="M4 8h16M4 16h16" />
+                </svg>
+                <span className="sr-only">{dict.nav.menu}</span>
+              </summary>
+              <nav className="mobile-nav" aria-label={dict.nav.label}>
+                <NavLinks links={links} variant="mobile" />
+                <Link href={`/${lang}/join`} className="mobile-join">
+                  {t.join}
+                  <Arrow />
+                </Link>
+              </nav>
+            </details>
+          </div>
         </div>
       </header>
     </>

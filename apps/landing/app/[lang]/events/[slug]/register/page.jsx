@@ -40,7 +40,7 @@ export default async function RegistrationPage({ params }) {
     notFound();
   }
 
-  const rules = localized(event, "rules", locale).split("\n").map((rule) => rule.trim()).filter(Boolean);
+  const rules = ruleSections(localized(event, "rules", locale));
 
   return (
     <main>

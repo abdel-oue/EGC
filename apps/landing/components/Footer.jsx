@@ -1,16 +1,36 @@
-import Image from "next/image";
-import Socials from "@/components/Socials";
-
-export default function Footer({ dict }) {
+import Link from "next/link";
+import { lang } from "next/root-params";
+import { socials } from "@/lib/site";
+import { Wordmark } from "./Editorial";
+import { editorial } from "./editorial-copy";
+export default async function Footer({ dict }) {
+  const locale = await lang();
+  const t = editorial(locale);
   return (
-    <footer className="border-t border-night/10 px-4 py-12 sm:px-8 lg:px-12">
-      <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-        <Image src="/brand/logo-full-night.svg" alt="ESISA Gaming Club" width={180} height={75} className="h-auto w-40" />
-        <p className="text-sm text-night/60">
-          {dict.footer.place}
-          <br />© ESISA Gaming Club. {dict.footer.rights}
-        </p>
-        <Socials tileClass="bg-night text-offwhite hover:bg-accent" />
+    <footer className="site-footer">
+      <div className="site-width footer-main">
+        <Link href={`/${locale}`} aria-label="ESISA Gaming Club">
+          <Wordmark />
+        </Link>
+        <p>{t.place}</p>
+        <div className="footer-socials">
+          <a href={socials.instagram} target="_blank" rel="noopener noreferrer">
+            Instagram ↗
+          </a>
+          <a href={socials.discord} target="_blank" rel="noopener noreferrer">
+            Discord ↗
+          </a>
+        </div>
+      </div>
+      <div className="site-width footer-utility">
+        <small>© ESISA Gaming Club. {dict.footer.rights}</small>
+        <div>
+          <Link href={`/${locale}/forms`}>{dict.nav.forms}</Link>
+          <Link href={`/${locale}/contact`}>{dict.nav.contact}</Link>
+          <a href={socials.twitch} target="_blank" rel="noopener noreferrer">
+            Twitch ↗
+          </a>
+        </div>
       </div>
     </footer>
   );

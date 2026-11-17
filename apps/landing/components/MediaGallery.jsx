@@ -39,15 +39,15 @@ export default function MediaGallery({ items, locale, labels }) {
     <>
       <div className="grid gap-6 md:grid-cols-2">
         {available.map((item, index) => (
-          <button key={item.id} type="button" onClick={() => open(index)} className="group border border-line bg-panel p-3 text-left">
-            <div className="relative aspect-video">
+          <button key={item.id} type="button" onClick={() => open(index)} className="photo-card group border border-line bg-panel text-left">
+            <div className="photo-frame relative isolate aspect-video overflow-hidden bg-panel">
               <Image
                 src={item.image_url}
                 alt={localized(item, "caption", locale)}
                 fill
                 unoptimized
                 sizes="(min-width: 768px) 45vw, 90vw"
-                className="object-contain transition-transform group-hover:scale-[1.02]"
+                className={`object-contain transition-transform group-hover:scale-[1.02] ${item.kind === "photo" ? "mix-blend-multiply" : ""}`}
               />
             </div>
             <span className="mt-4 block text-xs uppercase tracking-widest text-accent">
@@ -61,7 +61,7 @@ export default function MediaGallery({ items, locale, labels }) {
         ref={dialog}
         onKeyDown={keyboard}
         aria-label={labels.gallery}
-        className="fixed inset-0 m-auto max-h-[95svh] w-[95vw] max-w-6xl bg-night p-5 text-offwhite"
+        className="fixed inset-0 m-auto max-h-[95dvh] w-[95vw] max-w-6xl border border-offwhite/15 bg-surface-dark p-5 text-offwhite"
       >
         {current && (
           <>
@@ -71,7 +71,7 @@ export default function MediaGallery({ items, locale, labels }) {
                 {labels.close}
               </button>
             </div>
-            <div className="relative mt-5 h-[65svh]">
+            <div className="relative mt-5 h-[65dvh]">
               <Image src={current.image_url} alt={localized(current, "caption", locale)} fill unoptimized sizes="95vw" className="object-contain" />
             </div>
             <div className="mt-4 flex justify-between">

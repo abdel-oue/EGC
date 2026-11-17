@@ -1,10 +1,12 @@
 @theme {
-  --color-accent: #e35205;
-  --color-night: #0e0e10;
-  --color-offwhite: #f5f3ef;
-  --color-graphite: #2a2a2e;
-  --color-panel: #e9e7e3;
-  --color-line: #d8d5cf;
+  --color-accent: oklch(0.62751 0.19295 40.56);
+  --color-night: oklch(0.16467 0.00415 285.94);
+  --color-offwhite: oklch(0.96458 0.00574 84.57);
+  --color-graphite: oklch(0.28661 0.00723 285.93);
+  --color-panel: oklch(0.92840 0.00579 84.57);
+  --color-line: oklch(from var(--color-night) l c h / 0.14);
+  --color-surface-dark: oklch(0.21 0.004 286);
+  --color-surface-overlay: oklch(0.25 0.006 286);
 }
 
 @theme inline {

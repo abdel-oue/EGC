@@ -74,7 +74,7 @@ export default function Bracket({ matches, names, seeds, labels }) {
   });
 
   return (
-    <div className="overflow-x-auto border border-graphite bg-night p-6 text-offwhite sm:p-8">
+    <div className="overflow-x-auto border border-offwhite/15 bg-surface-dark p-6 text-offwhite sm:p-8">
       <div className="flex min-w-max">
         {columns.map(({ round, groups, count }) => (
           <div key={round} className="contents">

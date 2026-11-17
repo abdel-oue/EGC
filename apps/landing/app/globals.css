@@ -1,12 +1,13 @@
 @import "tailwindcss";
 @import "@egc/shared/theme.css";
+@import "./editorial.css";
 
 @source "../../../packages/shared";
 
 @utility brand-panel {
   background-image:
-    linear-gradient(145deg, transparent 62%, rgb(14 14 16 / 0.035) 62%, rgb(14 14 16 / 0.035) 76%, transparent 76%),
-    linear-gradient(145deg, transparent 80%, rgb(227 82 5 / 0.15) 80%, transparent 80.3%);
+    linear-gradient(145deg, transparent 62%, oklch(from var(--color-night) l c h / 0.035) 62%, oklch(from var(--color-night) l c h / 0.035) 76%, transparent 76%),
+    linear-gradient(145deg, transparent 80%, oklch(from var(--color-accent) l c h / 0.15) 80%, transparent 80.3%);
 }
 
 input:not([type="checkbox"], [type="radio"]), textarea, select {
@@ -26,7 +27,7 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
 }
 
 dialog::backdrop {
-  background: rgb(14 14 16 / 0.9);
+  background: oklch(from var(--color-night) l c h / 0.9);
 }
 
 html {
@@ -36,6 +37,43 @@ html {
 body {
   background: var(--color-offwhite);
   color: var(--color-night);
+}
+
+/* Nested photo corners share the same center: inner radius = outer - padding. */
+.photo-card {
+  --outer-radius: 1.25rem;
+  --card-padding: 0.75rem;
+  border-radius: var(--outer-radius);
+  padding: var(--card-padding);
+}
+.member-card {
+  --card-padding: 1rem;
+}
+.photo-frame,
+.photo-frame > img {
+  border-radius: max(0px, calc(var(--outer-radius) - var(--card-padding)));
+}
+
+/* A lighter layer keeps open content distinct from the dark shell. */
+.faq-item[open] {
+  background-color: var(--color-surface-dark);
+  box-shadow: inset 0 0 0 1px oklch(from var(--color-offwhite) l c h / 0.12);
+}
+
+/* Blur peaks between the two icon orientations, then resolves sharply. */
+@keyframes icon-open {
+  0%, 100% { filter: blur(0); }
+  50% { filter: blur(2px); }
+}
+@keyframes icon-close {
+  0%, 100% { filter: blur(0); }
+  50% { filter: blur(2px); }
+}
+details[open] > summary .state-icon {
+  animation: icon-open 220ms ease-out;
+}
+details:not([open]) > summary .state-icon {
+  animation: icon-close 220ms ease-out;
 }
 
 /* ---------- HUD shapes ---------- */
@@ -77,8 +115,8 @@ body {
 /* Subtle moving grid background. */
 @utility bg-grid {
   background-image:
-    linear-gradient(to right, rgb(14 14 16 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(14 14 16 / 0.05) 1px, transparent 1px);
+    linear-gradient(to right, oklch(from var(--color-night) l c h / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(from var(--color-night) l c h / 0.05) 1px, transparent 1px);
   background-size: 48px 48px;
   animation: grid-pan 30s linear infinite;
 }
@@ -86,7 +124,7 @@ body {
 /* Outlined giant "ghost" text behind headings. Dark sections set --ghost to a light color. */
 @utility text-ghost {
   color: transparent;
-  -webkit-text-stroke: 1.5px var(--ghost, rgb(14 14 16 / 0.12));
+  -webkit-text-stroke: 1.5px var(--ghost, oklch(from var(--color-night) l c h / 0.12));
 }
 
 /* Shine sweep on hover for buttons/cards. */
@@ -97,7 +135,7 @@ body {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.45) 50%, transparent 70%);
+    background: linear-gradient(110deg, transparent 30%, oklch(1 0 0 / 0.45) 50%, transparent 70%);
     transform: translateX(-120%);
     transition: transform 0.7s ease;
   }

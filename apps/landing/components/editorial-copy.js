@@ -37,7 +37,7 @@ const fr = {
   emptyText: "Les prochains événements seront annoncés ici.",
   emptyPastText: "Les événements passés apparaîtront ici.",
   followText: "Retrouve les annonces du club sur Discord et Instagram.",
-  moreGames: "D’autres jeux arrivent bientôt.",
+  moreGames: "More to come !",
   visitInstagram: "Voir Instagram",
   unavailableLines: ["Le programme", "se prépare."],
   ended: "Terminé",
@@ -61,7 +61,12 @@ const fr = {
   place: "ESISA Gaming Club · Fès",
   skip: "Aller au contenu",
   aboutEyebrow: "Au-delà du jeu",
-  aboutLines: ["Une école.", "Une équipe."],
+  aboutLines: ["EGC", "Where passion", "is born."],
+  aboutParagraphs: [
+    "Né au cœur de l'ESISA, le club rassemble tous ceux qui aiment jouer — ou qui ont juste envie d'essayer. Compétition, entraide et événements, sans pression : tu n'as pas besoin de savoir jouer pour en faire partie.",
+    "Ici, on joue, on découvre et on progresse ensemble. Chaque partie est une occasion d'apprendre, chaque tournoi une ambiance à vivre, que tu sois là pour t'amuser, te mesurer aux autres ou simplement passer un bon moment. Solo ou en équipe, EGC te donne le cadre pour jouer sérieusement, dans une ambiance saine et accueillante.",
+    "C'est ici que les étudiants de l'ESISA se retrouvent autour du jeu, quel que soit leur niveau.",
+  ],
 };
 const en = {
   club: "The club",
@@ -102,7 +107,7 @@ const en = {
   emptyText: "Upcoming events will be announced here.",
   emptyPastText: "Past events will appear here.",
   followText: "Find the club’s announcements on Discord and Instagram.",
-  moreGames: "More games coming soon.",
+  moreGames: "More to come !",
   visitInstagram: "Visit Instagram",
   unavailableLines: ["The schedule", "is on its way."],
   ended: "Ended",
@@ -126,7 +131,12 @@ const en = {
   place: "ESISA Gaming Club · Fez",
   skip: "Skip to content",
   aboutEyebrow: "Beyond the game",
-  aboutLines: ["One school.", "One team."],
+  aboutLines: ["EGC", "Where passion", "is born."],
+  aboutParagraphs: [
+    "Born at the heart of ESISA, the club brings together everyone who loves gaming — or simply wants to give it a try. Competition, support and events, without the pressure: you don't need to know how to play to be part of it.",
+    "Here, we play, discover and improve together. Every game is a chance to learn, every tournament an experience to share, whether you're here to have fun, challenge others or simply enjoy a good time. Solo or as a team, EGC gives you the space to play seriously in a healthy, welcoming environment.",
+    "This is where ESISA students come together through gaming, whatever their level.",
+  ],
 };
 export function editorial(locale = "fr") {
   return locale === "en" ? en : fr;

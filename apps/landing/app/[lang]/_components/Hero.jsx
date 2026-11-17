@@ -57,7 +57,13 @@ export default function Hero({ lang }) {
             <Arrow />
           </Link>
         </div>
-        <GameCards locale={lang} compact />
+        <div className="home-games-cards">
+          <GameCards locale={lang} compact />
+          <p className="more-games-note">
+            <span aria-hidden="true">+</span>
+            {t.moreGames}
+          </p>
+        </div>
       </section>
     </>
   );

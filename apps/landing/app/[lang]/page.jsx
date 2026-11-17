@@ -19,7 +19,7 @@ export default async function Home() {
     <main>
       <Hero lang={locale} dict={dict} />
       <Season dict={dict} limit={3} />
-      <About dict={dict} locale={locale} />
+      <About locale={locale} />
       <ClubCta locale={locale} />
       <Faq dict={dict} locale={locale} compact />
     </main>

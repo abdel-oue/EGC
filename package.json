@@ -24,7 +24,7 @@
     "deploy:admin": "npm run deploy --workspace @egc/admin"
   },
   "dependencies": {
-    "next": "16.4.2",
+    "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -33,7 +33,7 @@
     "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "eslint": "^9",
-    "eslint-config-next": "16.4.2",
+    "eslint-config-next": "16.4.6",
     "sharp": "^0.35.5",
     "tailwindcss": "^4"
   }

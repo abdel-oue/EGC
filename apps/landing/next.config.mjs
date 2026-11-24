@@ -12,6 +12,9 @@ const nextConfig = {
   },
   /* config options here */
   cacheComponents: false,
+  experimental: {
+    agentUpgrade: "security",
+  },
   turbopack: {
     root: workspaceRoot,
     rules: {

@@ -37,14 +37,14 @@ Templates: [apps/landing/.env.example](../apps/landing/.env.example) and [apps/a
 
 `NEXT_PUBLIC_*` values are baked into the build, so they must be present when you build. Changing them requires a new deploy.
 
-## ⚠️ Secret leaking into a Worker
+## Secrets stay out of the Worker bundle
 
-The Cloudflare build compiles every value from the **root** `.env*` files **and** the app's own `.env*` files into that Worker's server code. A Cloudflare secret overrides the compiled value at runtime, but the compiled copy is still inside the uploaded bundle.
+The OpenNext build copies every value from the root and app `.env*` files into `.open-next/cloudflare/next-env.mjs`. Both `npm run deploy:*` scripts run [scripts/strip-worker-env.mjs](../scripts/strip-worker-env.mjs) between build and upload, which keeps only `NEXT_PUBLIC_*` values. Server-only values (`SUPABASE_SECRET_KEY`, `RESEND_*`, `REGISTRATION_CODE_SECRET`) can therefore stay in `.env.local` for local dev, and production reads them only from `wrangler secret put`.
 
-So:
+Still:
 
-- **Delete the root `.env`** (or at least remove `SUPABASE_SECRET_KEY` from it). Otherwise the admin secret ends up inside the **landing** Worker.
-- Never put `SUPABASE_SECRET_KEY` in any `apps/landing/.env*` file.
-- For admin, prefer `wrangler secret put`. Remove the secret from `apps/admin/.env.local` before deploying if you don't want it in the bundle; local dev without it only disables invitations.
+- Never put `SUPABASE_SECRET_KEY` in any `apps/landing/.env*` file or the root `.env`.
+- Deploy only through `npm run deploy:landing` / `npm run deploy:admin`. Running `opennextjs-cloudflare deploy` directly skips the strip step.
+- `npm run preview:*` does not strip, so preview builds still contain those values locally.
 
 Env files are git-ignored (`.env`, `.env*.local`, `.dev.vars*`). Never commit them.

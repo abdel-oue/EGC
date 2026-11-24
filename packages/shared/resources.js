@@ -17,6 +17,7 @@ export const resources = {
       ["location", "text", true],
       ["status", "select", true, ["draft", "published", "archived"]],
       ["registration_enabled", "checkbox"],
+      ["allow_any_email", "checkbox"],
       ["registration_opens_at", "datetime-local"],
       ["registration_closes_at", "datetime-local"],
       ["entry_type", "select", true, ["individual", "team"]],

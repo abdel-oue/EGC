@@ -11,6 +11,19 @@ Each app reads its own env file. The old root `.env` is not loaded by `npm run d
 | `NEXT_PUBLIC_SUPABASE_URL`             |   yes   |  yes  | Same project for both apps             |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` |   yes   |  yes  | Safe for browsers                      |
 | `SUPABASE_SECRET_KEY`                  | **never** | yes | Server only, used for staff invitations |
+| `RESEND_API_KEY`                       |   yes   |       | Server only, sends registration codes  |
+| `RESEND_FROM`                          |   yes   |       | e.g. `ESISA Gaming Club <noreply@esisa-gaming.club>`; domain must be verified in Resend |
+| `REGISTRATION_CODE_SECRET`             |   yes   |       | Server only; must equal the Vault secret below |
+
+### Registration email codes
+
+Event registrations require a 6-digit code emailed through Resend. The database checks the code itself, so it needs the same secret as the landing server. Run once in the Supabase SQL editor after applying `20261124000000_verified_registrations.sql`:
+
+```sql
+select vault.create_secret('<same value as REGISTRATION_CODE_SECRET>', 'registration_code_secret');
+```
+
+Generate the value with `openssl rand -hex 32`. In production, store the three landing secrets with `npx wrangler secret put <NAME>` from `apps/landing`.
 
 Templates: [apps/landing/.env.example](../apps/landing/.env.example) and [apps/admin/.env.example](../apps/admin/.env.example).
 

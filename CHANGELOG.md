@@ -7,6 +7,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 
 ### Added
 
+- Event registrations ask for a phone number and are confirmed in a second step with a 6-digit code emailed from noreply@esisa-gaming.club (2 wrong codes lock the address for 20 minutes).
+- Per-event "accept any email" switch; when off, only @esisa.ac.ma addresses can register.
+- Solo events (outside Valorant) only ask for name, email and phone.
+
 - Next.js 16 project setup (JavaScript, Tailwind CSS v4, ESLint).
 - CLAUDE.md with project conventions.
 - Home page in French and English: hero with game picker, about, how to join, season events and FAQ.

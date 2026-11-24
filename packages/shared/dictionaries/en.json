@@ -294,6 +294,16 @@
     "date": "Date",
     "riotId": "Riot ID (Name#TAG)",
     "website": "Website",
+    "domain": "Use your @esisa.ac.ma email address.",
+    "schoolEmail": "Student email required ({domain}).",
+    "phone": "Phone",
+    "phoneHint": "Example: 06 12 34 56 78 or +212 6 12 34 56 78.",
+    "resendCode": "Resend the code",
+    "codeSent": "We just sent a 6-digit code to {email}. Enter it to confirm your registration.",
+    "code": "Verification code (6 digits)",
+    "codeError": "Wrong or expired code. Careful: after 2 mistakes you’ll have to wait 20 minutes.",
+    "codeLocked": "Too many attempts. Try again in 20 minutes.",
+    "codeEmailSubject": "{code}: your EGC registration code",
     "format": "Format",
     "pastEvent": "This event is over.",
     "rulesTitle": "Rules",
@@ -329,6 +339,16 @@
       "Runner-up",
       "3rd place",
       "4th place"
-    ]
+    ],
+    "verifyTitle": "Check your email",
+    "confirm": "Confirm registration",
+    "editDetails": "Edit my details",
+    "codeEmailPreview": "Your code for “{event}”: {code}",
+    "codeEmailTitle": "Confirm your registration",
+    "codeEmailIntro": "One more step to join “{event}”. Enter this code on the registration page:",
+    "codeEmailExpiry": "It stays valid for 10 minutes. Don’t share it with anyone, not even the committee.",
+    "codeEmailIgnore": "Didn’t ask for this? Just ignore this email: no registration will be created.",
+    "codeEmailTagline": "ESISA’s esports club, Fès.",
+    "codeEmailAuto": "Automated email, please don’t reply. Questions? Write to us from the Contact page on the website."
   }
 }

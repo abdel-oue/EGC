@@ -47,6 +47,21 @@ export function registrationOpen(event, now = Date.now()) {
 
 export const formLimits = { text: 200, textarea: 5000 };
 const phonePattern = /^\+[1-9]\d{7,14}$/;
+export const schoolDomain = "@esisa.ac.ma";
+
+export function normalizePhone(value) {
+  // Local Moroccan mobiles (06…, 07…) become +212….
+  return value.replace(/[\s().-]/g, "").replace(/^00/, "+").replace(/^0(?=[5-7]\d{8}$)/, "+212");
+}
+
+export function emailAllowed(event, email) {
+  return emailPattern.test(email) && (event.allow_any_email || email.endsWith(schoolDomain));
+}
+
+// Solo events outside Valorant need no roster: the registrant is the entry.
+export function needsRoster(event) {
+  return event.entry_type === "team" || event.game === "valorant";
+}
 
 export function formOpen(definition, now = Date.now()) {
   return Boolean(
@@ -65,7 +80,7 @@ export function validateForm(form, definition, now = Date.now()) {
 
   for (const { name, type, required, options } of definition.fields) {
     const value = type === "phone"
-      ? text(form, name).replace(/[\s().-]/g, "").replace(/^00/, "+")
+      ? normalizePhone(text(form, name))
       : text(form, name);
 
     if (!value) {
@@ -101,14 +116,15 @@ export function validateEventRegistration(form, event, now = Date.now()) {
     return { data: null, errors: { form: "closed" } };
   }
 
+  const team = event.entry_type === "team";
   const data = {
     event_id: event.id,
     name: field(errors, form, "name", 2, 80),
     email: field(errors, form, "email", 3, 120).toLowerCase(),
-    discord: field(errors, form, "discord", 2, 80),
-    team_name: event.entry_type === "team"
-      ? field(errors, form, "team_name", 2, 80)
-      : null,
+    phone: normalizePhone(text(form, "phone")),
+    code: text(form, "code"),
+    discord: team ? field(errors, form, "discord", 2, 80) : null,
+    team_name: team ? field(errors, form, "team_name", 2, 80) : null,
     locale: text(form, "locale") === "en" ? "en" : "fr",
     rules_accepted: form.get("rules") === "on",
     players: [],
@@ -116,10 +132,26 @@ export function validateEventRegistration(form, event, now = Date.now()) {
 
   if (!emailPattern.test(data.email)) {
     errors.email = "invalid";
+  } else if (!emailAllowed(event, data.email)) {
+    errors.email = "domain";
+  }
+
+  if (!phonePattern.test(data.phone)) {
+    errors.phone = "invalid";
+  }
+
+  // The code is only checked on the confirmation step.
+  if (text(form, "intent") === "confirm" && !/^\d{6}$/.test(data.code)) {
+    errors.code = "invalid";
   }
 
   if (!data.rules_accepted) {
     errors.rules = "invalid";
+  }
+
+  if (!needsRoster(event)) {
+    data.players.push({ name: data.name, handle: data.name, sub: false });
+    return { data, errors };
   }
 
   const required = event.entry_type === "individual" ? 1 : event.player_count;

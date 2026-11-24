@@ -62,6 +62,8 @@
   "starts_at": "Date et heure — Africa/Casablanca",
   "location": "Lieu",
   "registration_enabled": "Activer les inscriptions",
+  "allow_any_email": "Accepter toutes les adresses e-mail (sinon @esisa.ac.ma uniquement)",
+  "phone": "Téléphone",
   "registration_opens_at": "Ouverture — Africa/Casablanca",
   "registration_closes_at": "Clôture — Africa/Casablanca",
   "entry_type": "Type d’inscription",

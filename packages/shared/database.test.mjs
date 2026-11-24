@@ -2,10 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { PGlite } from "@electric-sql/pglite";
+import { pgcrypto } from "@electric-sql/pglite/contrib/pgcrypto";
+import { codeSlot, registrationCode } from "../../apps/landing/lib/email-code.js";
+
+const code = (email, eventId) => registrationCode("test-secret", email, eventId, codeSlot());
 
 // Real PostgreSQL execution with minimal Supabase-owned auth/storage scaffolding.
 test("migrations, submission functions, permissions, media visibility and audit history", async () => {
-  const db = new PGlite();
+  const db = new PGlite({ extensions: { pgcrypto } });
 
   try {
     await db.exec(`
@@ -21,9 +25,14 @@ test("migrations, submission functions, permissions, media visibility and audit 
       alter table storage.objects enable row level security;
       grant usage on schema public, auth, storage to anon, authenticated;
       grant execute on function auth.uid() to anon, authenticated;
+      create schema extensions;
+      create extension pgcrypto schema extensions;
+      create schema vault;
+      create table vault.decrypted_secrets (name text, decrypted_secret text);
+      insert into vault.decrypted_secrets values ('registration_code_secret', 'test-secret');
     `);
 
-    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql", "20261103000000_forms.sql"]) {
+    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql", "20261103000000_forms.sql", "20261124000000_verified_registrations.sql"]) {
       await db.exec(await readFile(new URL(`../../supabase/migrations/${name}`, import.meta.url), "utf8"));
 
       if (name === "20261022000000_team_registrations.sql") {
@@ -48,8 +57,9 @@ test("migrations, submission functions, permissions, media visibility and audit 
       insert into staff_profiles (user_id, email, role) values
         ('00000000-0000-0000-0000-000000000001', 'admin@example.com', 'admin'),
         ('00000000-0000-0000-0000-000000000002', 'manager@example.com', 'manager');
-      insert into events (id, slug, title_fr, starts_at, status, registration_enabled, game, entry_type, player_count)
-      values ('10000000-0000-0000-0000-000000000001', 'duo', 'Tournoi duo', now() + interval '1 day', 'published', true, 'valorant', 'team', 2);
+      insert into events (id, slug, title_fr, starts_at, status, registration_enabled, game, entry_type, player_count, allow_any_email)
+      values ('10000000-0000-0000-0000-000000000001', 'duo', 'Tournoi duo', now() + interval '1 day', 'published', true, 'valorant', 'team', 2, true),
+        ('10000000-0000-0000-0000-000000000002', 'fc-solo', 'Tournoi FC', now() + interval '1 day', 'published', true, 'fc', 'individual', 1, false);
       insert into events (slug, title_fr, starts_at) values ('draft', 'Brouillon', now() + interval '2 days');
       insert into members (id, name, role_fr, image_path, visible) values
         ('visible', 'Visible Member', 'Président', 'visible.jpeg', true),
@@ -59,7 +69,7 @@ test("migrations, submission functions, permissions, media visibility and audit 
       set role anon;
     `);
 
-    assert.equal((await db.query("select * from events")).rows.length, 1);
+    assert.equal((await db.query("select * from events")).rows.length, 2);
     assert.equal((await db.query("select * from members")).rows.length, 1);
     assert.equal((await db.query("select * from contact_messages")).rows.length, 0);
     assert.equal((await db.query("select * from team_registrations")).rows.length, 0);
@@ -74,6 +84,7 @@ test("migrations, submission functions, permissions, media visibility and audit 
 
     const registration = {
       event_id: "10000000-0000-0000-0000-000000000001", name: "Captain", email: "captain@example.com",
+      code: await code("captain@example.com", "10000000-0000-0000-0000-000000000001"), phone: "+212612345678",
       discord: "captain", team_name: "Duo", locale: "fr", rules_accepted: true,
       players: [
         { name: "Player One", handle: "Player1#EGC", rank: "gold", sub: false },
@@ -83,17 +94,47 @@ test("migrations, submission functions, permissions, media visibility and audit 
     await db.query("select submit_event_registration($1::jsonb)", [JSON.stringify(registration)]);
     await assert.rejects(db.query("select submit_event_registration($1::jsonb)", [JSON.stringify(registration)]), { code: "23505" });
     await assert.rejects(db.query("select submit_event_registration($1::jsonb)", [JSON.stringify({ ...registration, players: [] })]), { code: "22023" });
-    await assert.rejects(db.query("select submit_event_registration($1::jsonb)", [JSON.stringify({ ...registration, email: "another@example.com", players: [registration.players[0], registration.players[0]] })]), { code: "22023" });
+    const another = { ...registration, email: "another@example.com", code: await code("another@example.com", registration.event_id) };
+    await assert.rejects(db.query("select submit_event_registration($1::jsonb)", [JSON.stringify({ ...another, players: [registration.players[0], registration.players[0]] })]), { code: "22023" });
+    await assert.rejects(db.query("select submit_event_registration($1::jsonb)", [JSON.stringify({ ...another, phone: "0612" })]), { code: "22023" });
     assert.equal((await db.query("select * from event_registrations")).rows.length, 0);
+
+    // Codes: never readable by visitors, wrong guesses are counted, then the address is locked.
+    await assert.rejects(db.query("select registration_code('a@b.c', '10000000-0000-0000-0000-000000000001', 1)"));
+    const submitRegistration = async (payload) => (await db.query("select submit_event_registration($1::jsonb) as outcome", [JSON.stringify(payload)])).rows[0].outcome;
+    const wrong = { ...another, code: another.code === "000000" ? "000001" : "000000" };
+    for (let index = 0; index < 2; index += 1) {
+      assert.equal(await submitRegistration(wrong), "code");
+    }
+    assert.equal(await submitRegistration(another), "locked");
+
+    // Solo FC: school addresses only, the registrant becomes the single entry.
+    const solo = {
+      event_id: "10000000-0000-0000-0000-000000000002", name: "Sami Fc", email: "sami@esisa.ac.ma",
+      code: await code("sami@esisa.ac.ma", "10000000-0000-0000-0000-000000000002"), phone: "+212712345678",
+      locale: "fr", rules_accepted: true, players: [],
+    };
+    const requestCode = (address) => db.query("select request_registration_code($1, $2)", [solo.event_id, address]);
+    await assert.rejects(requestCode("sami@gmail.com"), { code: "P0003" });
+    await assert.rejects(submitRegistration({ ...solo, email: "sami@gmail.com" }), { code: "P0003" });
+    for (let index = 0; index < 3; index += 1) {
+      await requestCode("sami@esisa.ac.ma");
+    }
+    await assert.rejects(requestCode("sami@esisa.ac.ma"), { code: "P0001" });
+    assert.equal(await submitRegistration(solo), null);
+    await assert.rejects(requestCode("sami@esisa.ac.ma"), { code: "23505" });
 
     await db.exec("reset role; set role authenticated; set request.jwt.claim.sub = '00000000-0000-0000-0000-000000000002';");
     assert.equal((await db.query("select * from contact_messages")).rows.length, 1);
-    assert.equal((await db.query("select * from event_registrations")).rows.length, 1);
-    assert.equal((await db.query("select * from events")).rows.length, 2);
+    assert.equal((await db.query("select * from event_registrations")).rows.length, 2);
+    assert.deepEqual((await db.query("select phone, discord, players from event_registrations where email = 'sami@esisa.ac.ma'")).rows,
+      [{ phone: "+212712345678", discord: null, players: [{ name: "Sami Fc", handle: "Sami Fc", sub: false }] }]);
+    assert.equal((await db.query("select * from registration_code_log")).rows.length, 0);
+    assert.equal((await db.query("select * from events")).rows.length, 3);
     assert.equal((await db.query("select * from team_registrations")).rows.length, 1);
     await db.exec("update event_registrations set status = 'approved'; update contact_messages set status = 'resolved';");
     assert.equal((await db.query("update staff_profiles set role = 'admin' where role = 'manager' returning *")).rows.length, 0);
-    assert.equal((await db.query("select * from activity_log where actor_id = '00000000-0000-0000-0000-000000000002'")).rows.length, 2);
+    assert.equal((await db.query("select * from activity_log where actor_id = '00000000-0000-0000-0000-000000000002'")).rows.length, 3);
 
     await db.exec("set request.jwt.claim.sub = '00000000-0000-0000-0000-000000000001';");
     await assert.rejects(db.exec("update staff_profiles set active = false where role = 'admin'"));
@@ -120,6 +161,8 @@ test("migrations, submission functions, permissions, media visibility and audit 
     assert.ok(!("email" in participants[0]));
     await assert.rejects(db.query("insert into event_matches (event_id, round, position) values ('10000000-0000-0000-0000-000000000001', 1, 0)"));
 
+    // The seeded form closes on a fixed date; reopen it so this test does not expire.
+    await db.exec("reset role; update forms set closes_at = null; set role anon;");
     const [form] = (await db.query("select * from forms")).rows;
     assert.equal(form.slug, "representant-fifa-k-otaku-2026");
     const answers = {

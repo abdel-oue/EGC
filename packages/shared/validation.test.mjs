@@ -14,6 +14,7 @@ const base = {
   entry_type: "team",
   player_count: 2,
   substitute_count: 1,
+  allow_any_email: true,
 };
 
 function registration(event, includeSubstitute = false) {
@@ -21,6 +22,9 @@ function registration(event, includeSubstitute = false) {
   form.set("name", "Player Example");
   form.set("email", "PLAYER@EXAMPLE.COM");
   form.set("discord", "player.example");
+  form.set("phone", "06 12 34 56 78");
+  form.set("code", "012345");
+  form.set("intent", "confirm");
   form.set("team_name", "EGC Duo");
   form.set("rules", "on");
   const count = event.entry_type === "individual" ? 1 : event.player_count;
@@ -55,7 +59,7 @@ test("forms normalize phones, enforce required fields and options, and respect c
   assert.deepEqual(errors, {});
   assert.deepEqual(data, { form_id: "form", locale: "en", answers: { whatsapp: "+212612345678", platform: "ps5", consent: true } });
 
-  form.set("whatsapp", "0612345678");
+  form.set("whatsapp", "12345");
   form.set("platform", "switch");
   form.delete("consent");
   assert.deepEqual(Object.keys(validateForm(form, definition, now).errors), ["whatsapp", "platform", "consent"]);
@@ -114,6 +118,30 @@ test("other games accept game handles without Valorant rank requirements", () =>
   form.set("player_0_handle", "MinecraftPlayer");
   form.delete("player_0_rank");
   assert.deepEqual(validateEventRegistration(form, event, now).errors, {});
+});
+
+test("solo FC entries need only the registrant, a school email, a phone and a code", () => {
+  const event = { ...base, game: "fc", entry_type: "individual", player_count: 1, substitute_count: 0, allow_any_email: false };
+  const form = new FormData();
+  form.set("name", "Sami Fc");
+  form.set("email", "Sami@ESISA.ac.ma");
+  form.set("phone", "07 12 34 56 78");
+  form.set("code", "123456");
+  form.set("intent", "confirm");
+  form.set("rules", "on");
+  const { data, errors } = validateEventRegistration(form, event, now);
+  assert.deepEqual(errors, {});
+  assert.equal(data.phone, "+212712345678");
+  assert.equal(data.discord, null);
+  assert.deepEqual(data.players, [{ name: "Sami Fc", handle: "Sami Fc", sub: false }]);
+
+  form.set("email", "sami@gmail.com");
+  form.set("phone", "12");
+  form.set("code", "12a456");
+  assert.deepEqual(validateEventRegistration(form, event, now).errors, { email: "domain", phone: "invalid", code: "invalid" });
+  assert.deepEqual(validateEventRegistration(form, { ...event, allow_any_email: true }, now).errors, { phone: "invalid", code: "invalid" });
+  form.set("intent", "send");
+  assert.deepEqual(validateEventRegistration(form, { ...event, allow_any_email: true }, now).errors, { phone: "invalid" });
 });
 
 test("registration windows are enforced including exact closing boundary", () => {

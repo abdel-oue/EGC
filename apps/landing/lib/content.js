@@ -58,7 +58,8 @@ const readContent = cache(async (table) => {
     };
   }
 
-  let query = client.from(table).select("*");
+  // Events also carry the public count of taken places.
+  let query = client.from(table).select(table === "events" ? "*,registration_count" : "*");
 
   if (table === "events") {
     query = query.eq("status", "published").order("starts_at");

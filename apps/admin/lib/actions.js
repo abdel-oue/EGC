@@ -85,11 +85,13 @@ export async function saveContent(resource, id, _previous, form) {
     }
 
     let mutation;
+    let savedId = id;
 
     if (id) {
       mutation = client.from(config.table).update(data).eq("id", id).select("id").single();
     } else {
-      mutation = client.from(config.table).insert({ ...data, id: crypto.randomUUID() }).select("id").single();
+      savedId = crypto.randomUUID();
+      mutation = client.from(config.table).insert({ ...data, id: savedId }).select("id").single();
     }
 
     const { error } = await mutation;
@@ -97,6 +99,9 @@ export async function saveContent(resource, id, _previous, form) {
     if (error) {
       throw error;
     }
+
+    revalidatePath(resource === "events" ? "/events" : `/manage/${resource}`, "layout");
+    return { success: "saved", id: savedId };
   } catch {
     if (uploaded) {
       await client.storage.from("club-media").remove([uploaded]);
@@ -104,9 +109,6 @@ export async function saveContent(resource, id, _previous, form) {
 
     return { error: "error" };
   }
-
-  revalidatePath(`/manage/${resource}`);
-  return { success: "saved" };
 }
 
 export async function updateSubmission(kind, id, _previous, form) {
@@ -125,9 +127,72 @@ export async function updateSubmission(kind, id, _previous, form) {
   }
 
   revalidatePath(`/submissions/${kind}`);
+
+  if (kind === "registrations") {
+    revalidatePath("/events/[id]", "page");
+  }
   return { success: "saved" };
 }
 
+const uuid = /^[0-9a-f-]{36}$/i;
+
+// Bulk status change from an event's registration list.
+export async function updateRegistrations(eventId, ids, status) {
+  const { client } = await requireStaff();
+
+  if (!uuid.test(eventId) || !submissions.registrations.statuses.includes(status) ||
+    !Array.isArray(ids) || !ids.length || ids.length > 1024 || !ids.every((id) => uuid.test(id))) {
+    return { error: "error" };
+  }
+
+  const { error } = await client.from("event_registrations")
+    .update({ status }).eq("event_id", eventId).in("id", ids);
+
+  if (error) {
+    return { error: "error" };
+  }
+
+  revalidatePath(`/events/${eventId}`);
+  return { success: "saved" };
+}
+
+// Paid / present switches (check-in desk).
+export async function setRegistrationFlag(eventId, id, flag, value) {
+  const { client } = await requireStaff();
+  const changes = {
+    paid: { paid: value === true },
+    present: { checked_in_at: value === true ? new Date().toISOString() : null },
+  }[flag];
+
+  if (!changes || !uuid.test(eventId) || !uuid.test(id)) {
+    return { error: "error" };
+  }
+
+  const { error } = await client.from("event_registrations")
+    .update(changes).eq("event_id", eventId).eq("id", id).select("id").single();
+
+  if (error) {
+    return { error: "error" };
+  }
+
+  revalidatePath(`/events/${eventId}`);
+  return { success: "saved" };
+}
+
+// Fisher–Yates with the platform CSPRNG.
+// ponytail: modulo bias of 2^32 % n is negligible for ≤ 1024 entries.
+function shuffle(items) {
+  const copy = [...items];
+
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const other = crypto.getRandomValues(new Uint32Array(1))[0] % (index + 1);
+    [copy[index], copy[other]] = [copy[other], copy[index]];
+  }
+
+  return copy;
+}
+
+// mode=draw: random draw (live "tirage"); otherwise rank-based seeding.
 export async function generateBracket(eventId, _previous, form) {
   const { client } = await requireStaff();
   const [{ data: entries, error }, { count, error: countError }] = await Promise.all([
@@ -147,7 +212,8 @@ export async function generateBracket(eventId, _previous, form) {
     return { error: "confirmRegenerate" };
   }
 
-  const matches = createBracket(seedEntries(entries).map((entry) => entry.id))
+  const ordered = form.get("mode") === "draw" ? shuffle(entries) : seedEntries(entries);
+  const matches = createBracket(ordered.map((entry) => entry.id))
     .map((match) => ({ ...match, event_id: eventId }));
   const { error: deleteError } = await client.from("event_matches").delete().eq("event_id", eventId);
   const { error: insertError } = deleteError
@@ -158,8 +224,8 @@ export async function generateBracket(eventId, _previous, form) {
     return { error: "error" };
   }
 
-  revalidatePath(`/brackets/${eventId}`);
-  return { success: "generated" };
+  revalidatePath(`/events/${eventId}`);
+  return { success: form.get("mode") === "draw" ? "drawn" : "generated" };
 }
 
 // Empty fields return an entry to automatic seeding; set ones must be unique within 1…entries.
@@ -191,7 +257,7 @@ export async function saveSeeds(eventId, _previous, form) {
     }
   }
 
-  revalidatePath(`/brackets/${eventId}`);
+  revalidatePath(`/events/${eventId}`);
   return { success: "saved" };
 }
 
@@ -224,7 +290,7 @@ export async function saveMatchWinner(eventId, round, position, _previous, form)
     }
   }
 
-  revalidatePath(`/brackets/${eventId}`);
+  revalidatePath(`/events/${eventId}`);
   return { success: "saved" };
 }
 

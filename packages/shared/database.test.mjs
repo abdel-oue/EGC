@@ -32,7 +32,7 @@ test("migrations, submission functions, permissions, media visibility and audit 
       insert into vault.decrypted_secrets values ('registration_code_secret', 'test-secret');
     `);
 
-    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql", "20261103000000_forms.sql", "20261124000000_verified_registrations.sql"]) {
+    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql", "20261103000000_forms.sql", "20261124000000_verified_registrations.sql", "20261127000000_event_hub.sql"]) {
       await db.exec(await readFile(new URL(`../../supabase/migrations/${name}`, import.meta.url), "utf8"));
 
       if (name === "20261022000000_team_registrations.sql") {
@@ -112,7 +112,7 @@ test("migrations, submission functions, permissions, media visibility and audit 
     const solo = {
       event_id: "10000000-0000-0000-0000-000000000002", name: "Sami Fc", email: "sami@esisa.ac.ma",
       code: await code("sami@esisa.ac.ma", "10000000-0000-0000-0000-000000000002"), phone: "+212712345678",
-      locale: "fr", rules_accepted: true, players: [],
+      locale: "fr", rules_accepted: true, players: [], school: "ESISA",
     };
     const requestCode = (address) => db.query("select request_registration_code($1, $2)", [solo.event_id, address]);
     await assert.rejects(requestCode("sami@gmail.com"), { code: "P0003" });
@@ -123,6 +123,26 @@ test("migrations, submission functions, permissions, media visibility and audit 
     await assert.rejects(requestCode("sami@esisa.ac.ma"), { code: "P0001" });
     assert.equal(await submitRegistration(solo), null);
     await assert.rejects(requestCode("sami@esisa.ac.ma"), { code: "23505" });
+
+    // Capacity: visitors see the taken places; a full event refuses codes and submissions.
+    const places = async () => (await db.query("select registration_count(events) as taken, registration_full(events) as full from events where slug = 'fc-solo'")).rows[0];
+    assert.deepEqual(await places(), { taken: 1, full: false });
+    await db.exec("reset role;");
+    assert.deepEqual((await db.query("select school, paid, checked_in_at from event_registrations where email = 'sami@esisa.ac.ma'")).rows,
+      [{ school: "ESISA", paid: false, checked_in_at: null }]);
+    await db.exec("set role anon;");
+    await db.exec("reset role; update events set max_registrations = 2 where slug = 'fc-solo'; set role anon;");
+    const second = { ...solo, name: "Nora Fc", email: "nora@esisa.ac.ma", code: await code("nora@esisa.ac.ma", solo.event_id) };
+    await requestCode(second.email);
+    assert.equal(await submitRegistration(second), null);
+    assert.deepEqual(await places(), { taken: 2, full: true });
+    const third = { ...solo, name: "Omar Fc", email: "omar@esisa.ac.ma", code: await code("omar@esisa.ac.ma", solo.event_id) };
+    await assert.rejects(requestCode(third.email), { code: "P0004" });
+    await assert.rejects(submitRegistration(third), { code: "P0004" });
+    // A rejected registration frees its place.
+    await db.exec("reset role; update event_registrations set status = 'rejected' where email = 'nora@esisa.ac.ma'; set role anon;");
+    assert.deepEqual(await places(), { taken: 1, full: false });
+    await db.exec("reset role; delete from event_registrations where email = 'nora@esisa.ac.ma'; update events set max_registrations = null; set role anon;");
 
     await db.exec("reset role; set role authenticated; set request.jwt.claim.sub = '00000000-0000-0000-0000-000000000002';");
     assert.equal((await db.query("select * from contact_messages")).rows.length, 1);

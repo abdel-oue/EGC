@@ -36,9 +36,15 @@ export function validateContact(form) {
   return { data, errors };
 }
 
+// registration_count is the public computed column (pending + approved entries).
+export function registrationFull(event) {
+  return Boolean(event && event.max_registrations != null &&
+    (event.registration_count ?? 0) >= event.max_registrations);
+}
+
 export function registrationOpen(event, now = Date.now()) {
   return Boolean(
-    event && event.status === "published" && event.registration_enabled &&
+    event && event.status === "published" && event.registration_enabled && !registrationFull(event) &&
     new Date(event.starts_at).getTime() > now &&
     (!event.registration_opens_at || new Date(event.registration_opens_at).getTime() <= now) &&
     (!event.registration_closes_at || new Date(event.registration_closes_at).getTime() > now)
@@ -113,7 +119,7 @@ export function validateEventRegistration(form, event, now = Date.now()) {
   const errors = {};
 
   if (!registrationOpen(event, now)) {
-    return { data: null, errors: { form: "closed" } };
+    return { data: null, errors: { form: registrationFull(event) ? "full" : "closed" } };
   }
 
   const team = event.entry_type === "team";
@@ -138,6 +144,22 @@ export function validateEventRegistration(form, event, now = Date.now()) {
 
   if (!phonePattern.test(data.phone)) {
     errors.phone = "invalid";
+  }
+
+  // School: "esisa" or "other" + its name. School-address-only events are ESISA by definition.
+  // Choosing ESISA (free entry) requires the school address.
+  const school = event.allow_any_email ? text(form, "school") : "esisa";
+
+  if (school === "esisa") {
+    data.school = "ESISA";
+
+    if (!errors.email && !data.email.endsWith(schoolDomain)) {
+      errors.email = "domain";
+    }
+  } else if (school === "other") {
+    data.school = field(errors, form, "school_other", 2, 120);
+  } else {
+    errors.school = "invalid";
   }
 
   // The code is only checked on the confirmation step.

@@ -23,8 +23,18 @@ export const resources = {
       ["entry_type", "select", true, ["individual", "team"]],
       ["player_count", "number", true],
       ["substitute_count", "number", true],
+      ["max_registrations", "number"],
     ],
     defaults: { status: "draft", entry_type: "individual", player_count: 1, substitute_count: 0, location: "ESISA, Fès" },
+    // Admin form sections, in order; the last one is collapsed.
+    groups: [
+      ["groupGeneral", ["title_fr", "game", "status", "slug"]],
+      ["groupWhen", ["starts_at", "location"]],
+      ["groupRegistration", ["registration_enabled", "allow_any_email", "max_registrations", "registration_opens_at", "registration_closes_at"]],
+      ["groupFormat", ["entry_type", "player_count", "substitute_count"]],
+      ["groupTexts", ["description_fr", "rules_fr", "prizes"]],
+      ["groupEnglish", ["title_en", "description_en", "rules_en"]],
+    ],
   },
   members: {
     table: "members",
@@ -106,7 +116,8 @@ export function validateResource(resource, data) {
       errors[name] = "invalid";
     }
 
-    if (type === "number" && (!Number.isInteger(value) || Math.abs(value) > 10000)) {
+    if (type === "number" && value !== null && value !== undefined &&
+      (!Number.isInteger(value) || Math.abs(value) > 10000)) {
       errors[name] = "invalid";
     }
 
@@ -128,6 +139,10 @@ export function validateResource(resource, data) {
       data.substitute_count < 0 || data.substitute_count > 5 ||
       (data.entry_type === "individual" && data.player_count !== 1)) {
       errors.player_count = "invalid";
+    }
+
+    if (data.max_registrations != null && (data.max_registrations < 2 || data.max_registrations > 1024)) {
+      errors.max_registrations = "invalid";
     }
 
     if (data.registration_opens_at && data.registration_closes_at &&

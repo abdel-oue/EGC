@@ -37,7 +37,7 @@ export default async function SubmissionDetail({ params }) {
 
   return (
     <>
-      <Link href={`/submissions/${kind}`} className="mb-6 block underline">{t.back}</Link>
+      <Link href={kind === "registrations" ? `/events/${row.event_id}?tab=registrations` : `/submissions/${kind}`} className="mb-6 block underline">{t.back}</Link>
       <h1 className="mb-8 font-display text-3xl font-bold uppercase">{t[kind]}</h1>
       {parent && <p className="mb-6 font-bold">{parent.title_fr}</p>}
       <dl className="mb-10 grid max-w-4xl gap-5 border border-line bg-panel p-6">

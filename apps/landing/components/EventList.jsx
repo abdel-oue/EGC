@@ -1,10 +1,21 @@
 import Link from "next/link";
 import { eventDate, localized } from "@egc/shared/i18n.js";
-import { registrationOpen } from "@egc/shared/validation.js";
+import { registrationFull, registrationOpen } from "@egc/shared/validation.js";
 import { games } from "@/lib/site";
 import { editorial } from "./editorial-copy";
 import { Arrow } from "./Editorial";
 import EventEmpty from "./EventEmpty";
+
+// "12 / 64 inscrits", or the full notice once every place is taken.
+export function placesLabel(event, labels) {
+  if (registrationFull(event)) {
+    return labels.full;
+  }
+
+  return labels.placesCount
+    .replace("{taken}", event.registration_count ?? 0)
+    .replace("{max}", event.max_registrations);
+}
 
 export default function EventList({
   events,
@@ -50,6 +61,9 @@ export default function EventList({
                 {eventDate(event.starts_at, locale)}
               </time>
               {event.location && <span>{event.location}</span>}
+              {event.max_registrations && !past && (
+                <span>{placesLabel(event, labels)}</span>
+              )}
             </p>
             <Link
               href={`/${locale}/events/${event.slug}`}

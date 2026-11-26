@@ -1,11 +1,16 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import t from "@egc/shared/admin.json";
 import { resources } from "@egc/shared/resources.js";
 import { requireStaff } from "@/lib/auth";
 
 export default async function ContentList({ params, searchParams }) {
   const { resource } = await params;
+
+  // Events are managed from their own pages.
+  if (resource === "events") {
+    redirect("/events");
+  }
   const config = resources[resource];
 
   if (!config) {
@@ -32,7 +37,6 @@ export default async function ContentList({ params, searchParams }) {
         <h1 className="font-display text-3xl font-bold uppercase">{t[resource]}</h1>
         {!config.noCreate && <Link href={`/manage/${resource}/new`} className="bg-accent px-5 py-3 font-bold text-offwhite">{t.new}</Link>}
       </div>
-      {resource === "events" && <p className="mb-6">{t.draftNote}</p>}
       <form className="mb-8 flex gap-3">
         <input name="q" defaultValue={q} placeholder={t.search} aria-label={t.search} maxLength={100} />
         <button className="border border-line px-5">{t.filter}</button>

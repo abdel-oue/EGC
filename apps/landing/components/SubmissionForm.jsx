@@ -29,6 +29,30 @@ function InputField({ name, label, state, labels, type = "text", minLength, maxL
   );
 }
 
+// ESISA or another school; the school's name is asked only for "other".
+function SchoolField({ state, labels }) {
+  const [school, setSchool] = useState("");
+  const invalid = Boolean(state.errors?.school);
+
+  return (
+    <div className="space-y-4">
+      <label className="block">
+        <span className="mb-2 block font-bold">{labels.school}</span>
+        <select name="school" required value={school} onChange={(event) => setSchool(event.target.value)} aria-invalid={invalid}>
+          <option value="" disabled>{labels.schoolChoose}</option>
+          <option value="esisa">ESISA</option>
+          <option value="other">{labels.schoolOther}</option>
+        </select>
+        <span className="mt-2 block text-sm text-night/70">{labels.schoolHint}</span>
+        {invalid && <span className="mt-2 block text-sm text-accent">{labels.invalid}</span>}
+      </label>
+      {school === "other" && (
+        <InputField name="school_other" label={labels.schoolName} state={state} labels={labels} minLength={2} maxLength={120} />
+      )}
+    </div>
+  );
+}
+
 // Second step: the details stay in the (hidden) form and are sent again with the code.
 function VerifyStep({ state, labels, pending, onEdit }) {
   return (
@@ -106,6 +130,7 @@ export default function SubmissionForm({ action, locale, labels, rankLabels, eve
         {event ? (
           <>
             <InputField name="phone" label={labels.phone} type="tel" state={state} labels={labels} maxLength={20} hint={labels.phoneHint} />
+            {event.allow_any_email && <SchoolField state={state} labels={labels} />}
             {event.entry_type === "team" && (
               <>
                 <InputField name="discord" label={labels.discord} state={state} labels={labels} minLength={2} maxLength={80} />

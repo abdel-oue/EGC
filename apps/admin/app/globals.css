@@ -87,24 +87,53 @@ h1, h2 {
   text-transform: uppercase;
 }
 
-.admin-sidebar {
+/* Top bar: brand, horizontally scrollable navigation, account. */
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
-  flex-direction: column;
-  border-right: 1px solid oklch(from var(--color-offwhite) l c h / 0.12);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 28px;
+  padding: 12px 24px;
+  border-bottom: 1px solid oklch(from var(--color-offwhite) l c h / 0.12);
+}
+
+.admin-topbar .admin-brand {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.admin-topbar .admin-wordmark {
+  font-size: 30px;
+}
+
+.admin-navigation {
+  order: 3;
+  flex: 1 1 100%;
+  min-width: 0;
 }
 
 .admin-nav {
-  display: grid;
-  gap: 5px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.admin-nav li {
+  flex: none;
 }
 
 .admin-nav a {
   display: block;
-  padding: 10px 12px;
-  border: 1px solid transparent;
+  padding: 10px 14px;
   border-radius: 10px;
   color: oklch(from var(--color-offwhite) l c h / 0.75);
   font-weight: 500;
+  white-space: nowrap;
   transition: background-color 160ms ease, color 160ms ease;
 }
 
@@ -114,15 +143,16 @@ h1, h2 {
 }
 
 .admin-nav a[aria-current="page"] {
-  border-color: oklch(from var(--color-accent) l c h / 0.3);
   background: oklch(from var(--color-accent) l c h / 0.13);
   color: var(--color-offwhite);
-  box-shadow: inset 2px 0 var(--color-accent);
+  box-shadow: inset 0 -2px var(--color-accent);
 }
 
 .admin-account {
-  margin-top: auto;
-  padding-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
 }
 
 .admin-account button:hover {
@@ -131,6 +161,17 @@ h1, h2 {
 
 .admin-account a:hover {
   color: var(--color-offwhite);
+}
+
+@media (min-width: 1280px) {
+  .admin-navigation {
+    order: 0;
+    flex: 1 1 auto;
+  }
+
+  .admin-account {
+    margin-left: 0;
+  }
 }
 
 .admin-main :is(form, section, article, a).border {
@@ -194,57 +235,6 @@ h1, h2 {
   background: oklch(from var(--color-accent) l c h / 0.06);
 }
 
-@media (max-width: 1023px) {
-  .admin-sidebar {
-    padding: 20px;
-  }
-
-  .admin-sidebar .admin-brand {
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .admin-sidebar .admin-wordmark {
-    font-size: 42px;
-  }
-
-  .admin-nav {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-graphite) transparent;
-  }
-
-  .admin-nav li {
-    flex: none;
-  }
-
-  .admin-nav a {
-    white-space: nowrap;
-  }
-
-  .admin-account {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px 20px;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid oklch(from var(--color-offwhite) l c h / 0.12);
-  }
-
-  .admin-account > p {
-    width: 100%;
-  }
-
-  .admin-account form, .admin-account > a {
-    margin-top: 0;
-  }
-}
-
 input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="true"] {
   border-color: var(--color-accent);
 }
@@ -254,4 +244,28 @@ input[aria-invalid="true"], textarea[aria-invalid="true"], select[aria-invalid="
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Draw screen: each revealed name fades up; reduced motion disables animations globally. */
+@keyframes draw-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+}
+
+.draw-reveal {
+  animation: draw-in 600ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.draw-delay-1 {
+  animation-delay: 300ms;
+}
+
+.draw-delay-2 {
+  animation-delay: 900ms;
+}
+
+.draw-delay-3 {
+  animation-delay: 1300ms;
 }

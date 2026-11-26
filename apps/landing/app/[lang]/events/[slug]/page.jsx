@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { lang } from "next/root-params";
 import { eventDate, localized } from "@egc/shared/i18n.js";
-import { registrationOpen } from "@egc/shared/validation.js";
+import { registrationFull, registrationOpen } from "@egc/shared/validation.js";
 import { seedEntries } from "@egc/shared/bracket.js";
 import { publicClient } from "@egc/shared/supabase.js";
 import PageHeader from "@/components/PageHeader";
@@ -12,6 +12,7 @@ import EventTabs from "@/components/EventTabs";
 import Standings from "@/components/Standings";
 import Rules, { ruleSections } from "@/components/Rules";
 import Prizes from "@/components/Prizes";
+import { placesLabel } from "@/components/EventList";
 import { upcomingEvents } from "@/components/Season";
 import { getContent, getEventResults } from "@/lib/content";
 import { alternates } from "@/lib/seo";
@@ -71,18 +72,24 @@ export default async function EventPage({ params }) {
       content: (
         <div className="space-y-6">
           <p className="whitespace-pre-line text-lg">{localized(event, "description", locale)}</p>
-          <dl className="grid gap-4 sm:grid-cols-3">
+          <dl className={`grid gap-4 sm:grid-cols-2 ${event.max_registrations ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
             <div><dt className="font-bold">{labels.date}</dt><dd>{eventDate(event.starts_at, locale)}</dd></div>
             <div><dt className="font-bold">{labels.location}</dt><dd>{event.location}</dd></div>
             <div>
               <dt className="font-bold">{labels.format}</dt>
               <dd>{event.entry_type === "team" ? `${labels.teamFormat} · ${event.player_count}v${event.player_count}` : labels.individualFormat}</dd>
             </div>
+            {event.max_registrations && (
+              <div>
+                <dt className="font-bold">{labels.places}</dt>
+                <dd>{placesLabel(event, labels)}</dd>
+              </div>
+            )}
           </dl>
           <Prizes text={event.prizes || ""} labels={labels} />
           {registrationOpen(event) ? (
             <HudButton href={`/${locale}/events/${slug}/register`}>{labels.signup}</HudButton>
-          ) : <p>{past ? labels.pastEvent : labels.closed}</p>}
+          ) : <p>{past ? labels.pastEvent : registrationFull(event) ? labels.full : labels.closed}</p>}
         </div>
       ),
     },

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { lang } from "next/root-params";
 import { localized } from "@egc/shared/i18n.js";
-import { registrationOpen } from "@egc/shared/validation.js";
+import { registrationFull, registrationOpen } from "@egc/shared/validation.js";
 import PageHeader from "@/components/PageHeader";
 import SubmissionForm from "@/components/SubmissionForm";
 import Rules, { ruleSections } from "@/components/Rules";
@@ -54,7 +54,7 @@ export default async function RegistrationPage({ params }) {
         )}
         {registrationOpen(event) ? (
           <SubmissionForm action={registerEvent.bind(null, event.id)} locale={locale} labels={dict.content} rankLabels={dict.register.ranks} event={event} />
-        ) : <p role="status">{dict.content.closed}</p>}
+        ) : <p role="status">{registrationFull(event) ? dict.content.full : dict.content.closed}</p>}
       </div>
     </main>
   );

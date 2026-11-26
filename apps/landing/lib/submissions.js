@@ -12,7 +12,7 @@ function result(error) {
     return { ok: true };
   }
 
-  const codes = { "23505": "duplicate", P0002: "closed", P0001: "limited", P0003: "domain", "22023": "formError" };
+  const codes = { "23505": "duplicate", P0002: "closed", P0001: "limited", P0003: "domain", P0004: "full", "22023": "formError" };
   return { error: codes[error.code] || "server" };
 }
 
@@ -66,7 +66,7 @@ export async function submitForm(formId, _previous, form) {
 }
 
 async function readEvent(client, eventId) {
-  const { data, error } = await client.from("events").select("*").eq("id", eventId).maybeSingle();
+  const { data, error } = await client.from("events").select("*,registration_count").eq("id", eventId).maybeSingle();
   return error ? null : data;
 }
 

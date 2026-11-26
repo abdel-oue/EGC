@@ -10,6 +10,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Event registrations ask for a phone number and are confirmed in a second step with a 6-digit code emailed from noreply@esisa-gaming.club (2 wrong codes lock the address for 20 minutes).
 - Per-event "accept any email" switch; when off, only @esisa.ac.ma addresses can register.
 - Solo events (outside Valorant) only ask for name, email and phone.
+- Admin: each event has its own page with tabs (Inscriptions, Tirage au sort, Tableau et résultats, Infos et réglages). Registrations can be searched and filtered (status, ESISA/external, payment, presence), approved or rejected in bulk, exported to CSV, and their emails or phones copied. Staff mark external players as paid and check players in from a phone.
+- Admin: live draw. "Lancer le tirage au sort" places approved players at random, and a full-screen projector page reveals the first-round matches one by one.
+- Admin: top navigation bar instead of the sidebar, a dashboard with upcoming events (places, to review, unpaid, present) and a to-do list, and an event form grouped in sections with help text and a collapsible English translation.
+- Event registration asks for the school (ESISA or another school's name) when other schools are allowed; choosing ESISA requires the @esisa.ac.ma address.
+- Optional maximum number of places per event (e.g. 64 players). Event pages and cards show "taken / max" to every visitor, and a full event stops sending codes and accepting registrations. Rejected registrations free their place.
 
 - Next.js 16 project setup (JavaScript, Tailwind CSS v4, ESLint).
 - CLAUDE.md with project conventions.

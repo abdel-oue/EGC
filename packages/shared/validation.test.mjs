@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { validateContact, validateEventRegistration, validateForm, formOpen, registrationOpen } from "./validation.js";
+import { validateContact, validateEventRegistration, validateForm, formOpen, registrationFull, registrationOpen } from "./validation.js";
 import { validateResource } from "./resources.js";
 import { casablancaDateTime, dateTimeInput } from "./dates.js";
 
@@ -27,6 +27,8 @@ function registration(event, includeSubstitute = false) {
   form.set("intent", "confirm");
   form.set("team_name", "EGC Duo");
   form.set("rules", "on");
+  form.set("school", "other");
+  form.set("school_other", "EMSI Fès");
   const count = event.entry_type === "individual" ? 1 : event.player_count;
 
   for (let index = 0; index < count + (includeSubstitute ? 1 : 0); index += 1) {
@@ -134,14 +136,32 @@ test("solo FC entries need only the registrant, a school email, a phone and a co
   assert.equal(data.phone, "+212712345678");
   assert.equal(data.discord, null);
   assert.deepEqual(data.players, [{ name: "Sami Fc", handle: "Sami Fc", sub: false }]);
+  assert.equal(data.school, "ESISA");
 
   form.set("email", "sami@gmail.com");
+  form.set("school", "other");
+  form.set("school_other", "ENSA Fès");
   form.set("phone", "12");
   form.set("code", "12a456");
   assert.deepEqual(validateEventRegistration(form, event, now).errors, { email: "domain", phone: "invalid", code: "invalid" });
   assert.deepEqual(validateEventRegistration(form, { ...event, allow_any_email: true }, now).errors, { phone: "invalid", code: "invalid" });
   form.set("intent", "send");
   assert.deepEqual(validateEventRegistration(form, { ...event, allow_any_email: true }, now).errors, { phone: "invalid" });
+});
+
+test("school is ESISA (school address required) or another school's name", () => {
+  const event = { ...base, game: "fc", entry_type: "individual", player_count: 1, substitute_count: 0 };
+  const form = registration(event);
+  assert.equal(validateEventRegistration(form, event, now).data.school, "EMSI Fès");
+  form.set("school_other", "x");
+  assert.equal(validateEventRegistration(form, event, now).errors.school_other, "invalid");
+  form.set("school", "esisa");
+  assert.equal(validateEventRegistration(form, event, now).errors.email, "domain");
+  form.set("email", "player@esisa.ac.ma");
+  assert.deepEqual(validateEventRegistration(form, event, now).errors, {});
+  assert.equal(validateEventRegistration(form, event, now).data.school, "ESISA");
+  form.delete("school");
+  assert.equal(validateEventRegistration(form, event, now).errors.school, "invalid");
 });
 
 test("registration windows are enforced including exact closing boundary", () => {
@@ -162,6 +182,15 @@ test("registration windows are enforced including exact closing boundary", () =>
   assert.equal(registrationOpen({ ...base, registration_opens_at: new Date(now).toISOString() }, now), true);
 });
 
+test("a full event closes registration with its own error", () => {
+  const capped = { ...base, max_registrations: 64 };
+  assert.equal(registrationFull(base), false);
+  assert.equal(registrationOpen({ ...capped, registration_count: 63 }, now), true);
+  assert.equal(registrationFull({ ...capped, registration_count: 64 }), true);
+  assert.equal(registrationOpen({ ...capped, registration_count: 64 }, now), false);
+  assert.equal(validateEventRegistration(new FormData(), { ...capped, registration_count: 64 }, now).errors.form, "full");
+});
+
 test("Casablanca conversion honors winter offset and Ramadan time", () => {
   assert.equal(casablancaDateTime("2026-10-24T18:00"), "2026-10-24T17:00:00.000Z");
   assert.equal(casablancaDateTime("2026-03-01T18:00"), "2026-03-01T18:00:00.000Z");
@@ -179,5 +208,8 @@ test("staff event validation rejects invalid formats and inconsistent registrati
   assert.deepEqual(validateResource("events", event), {});
   assert.equal(validateResource("events", { ...event, slug: "Bad slug" }).slug, "invalid");
   assert.equal(validateResource("events", { ...event, entry_type: "individual" }).player_count, "invalid");
+  assert.deepEqual(validateResource("events", { ...event, max_registrations: null }), {});
+  assert.deepEqual(validateResource("events", { ...event, max_registrations: 64 }), {});
+  assert.equal(validateResource("events", { ...event, max_registrations: 1 }).max_registrations, "invalid");
   assert.equal(validateResource("events", { ...event, registration_closes_at: "2026-11-01T00:00:00Z" }).registration_closes_at, "invalid");
 });

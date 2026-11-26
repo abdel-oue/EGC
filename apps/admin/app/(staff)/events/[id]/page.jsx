@@ -4,7 +4,7 @@ import t from "@egc/shared/admin.json";
 import { eventDate } from "@egc/shared/i18n.js";
 import { requireStaff } from "@/lib/auth";
 import { generateBracket, saveContent } from "@/lib/actions";
-import { eventStats } from "@/lib/registrations";
+import { deadlinePassed, eliminated, eventStats } from "@/lib/registrations";
 import ActionForm from "@/components/ActionForm";
 import BracketPanel, { entryName } from "@/components/BracketPanel";
 import ContentForm from "@/components/ContentForm";
@@ -80,15 +80,20 @@ export default async function EventHub({ params, searchParams }) {
   const stats = eventStats(rows || []);
   const entries = (rows || []).filter((row) => row.status === "approved");
   const site = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const shortDate = (value) => new Date(value).toLocaleDateString("fr-MA", { weekday: "long", day: "numeric", month: "long", timeZone: "Africa/Casablanca" });
+  const days = [event.starts_at, event.second_day_at].filter(Boolean).map(shortDate);
 
   return (
     <>
       <Link href="/events" className="mb-4 block underline">{t.back}</Link>
       <header className="mb-6">
-        <p className="text-sm text-graphite/70">{eventDate(event.starts_at)} · {t.options[event.status]} · {event.location}</p>
+        <p className="text-sm text-graphite/70">
+          {eventDate(event.starts_at)}{event.second_day_at && ` + ${eventDate(event.second_day_at)}`} · {t.options[event.status]} · {event.location}
+        </p>
         <h1 className="mt-1 font-display text-3xl font-bold uppercase">{event.title_fr}</h1>
         <p className="mt-2">
           {t.places} : <b>{stats.taken} / {event.max_registrations || t.unlimited}</b>
+          {stats.waitlist > 0 && <> · {t.waitlist} : <b>{stats.waitlist}</b></>}
           {event.status === "published" && (
             <> · <a href={`${site}/fr/events/${event.slug}`} target="_blank" rel="noopener" className="underline">{t.viewOnSite} ↗</a></>
           )}
@@ -107,7 +112,16 @@ export default async function EventHub({ params, searchParams }) {
           </Link>
         ))}
       </nav>
-      {tab === "registrations" && <RegistrationsPanel eventId={id} slug={event.slug} rows={rows || []} />}
+      {tab === "registrations" && (
+        <RegistrationsPanel
+          eventId={id}
+          slug={event.slug}
+          rows={rows || []}
+          days={days}
+          eliminatedIds={eliminated(matches || [])}
+          paymentLate={deadlinePassed(event.payment_deadline)}
+        />
+      )}
       {tab === "draw" && <DrawPanel eventId={id} entries={entries} matches={matches || []} />}
       {tab === "bracket" && <BracketPanel eventId={id} entries={entries} matches={matches || []} />}
       {tab === "info" && (

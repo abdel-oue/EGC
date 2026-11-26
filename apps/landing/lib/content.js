@@ -25,7 +25,7 @@ const readEventResults = cache(async (eventId) => {
 
   const [participants, matches] = await Promise.all([
     client.rpc("event_participants", { target_event: eventId }),
-    client.from("event_matches").select("id,round,position,team_a,team_b,winner")
+    client.from("event_matches").select("id,round,position,team_a,team_b,winner,score,forfeit")
       .eq("event_id", eventId).order("round").order("position"),
   ]);
 
@@ -89,3 +89,11 @@ const readContent = cache(async (table) => {
 
   return { rows, unavailable: false };
 });
+
+// Render time shown on live pages (Casablanca wall clock).
+export function renderedAt(locale) {
+  return new Intl.DateTimeFormat(locale === "fr" ? "fr-MA" : "en-GB", {
+    timeStyle: "short",
+    timeZone: "Africa/Casablanca",
+  }).format(new Date());
+}

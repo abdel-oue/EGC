@@ -103,7 +103,7 @@ export default function SubmissionForm({ action, locale, labels, rankLabels, eve
   }
 
   if (state.ok) {
-    return <p role="status" className="border border-accent bg-panel p-8 font-display text-xl">{labels.success}</p>;
+    return <p role="status" className="border border-accent bg-panel p-8 font-display text-xl">{state.waitlisted ? labels.waitlisted : labels.success}</p>;
   }
 
   return (

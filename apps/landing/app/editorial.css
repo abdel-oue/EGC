@@ -358,17 +358,11 @@
   height: 18px;
   width: 18px;
 }
+/* Cropped logo file (brand/logo-full.svg): its size is the drawing itself. */
 .wordmark {
-  display: inline-block;
-  font-family: var(--font-inter), sans-serif;
-  font-size: 51px;
-  font-weight: 950;
-  font-style: italic;
-  line-height: 1;
-  letter-spacing: -0.08em;
-}
-.wordmark > span {
-  color: var(--color-accent);
+  display: block;
+  width: auto;
+  height: 64px;
 }
 .announcement {
   position: relative;
@@ -511,7 +505,7 @@
   gap: 32px;
 }
 .footer-main .wordmark {
-  font-size: 34px;
+  height: 48px;
 }
 .footer-main p {
   font-size: 12px;
@@ -1118,8 +1112,10 @@
   height: 265px;
   overflow: hidden;
 }
+/* Portrait game tiles in a landscape card: keep the tile's proportions and crop. */
 .event-card-art .game-art {
-  background-size: 400% 135%;
+  background-size: 400% auto;
+  background-position-y: 45%;
 }
 .event-card-art .game-art-club {
   background-size: 100% 100%;
@@ -1440,7 +1436,7 @@
     gap: 15px;
   }
   .nav-inner .wordmark {
-    font-size: 39px;
+    height: 48px;
   }
   .desktop-nav {
     display: none;
@@ -1862,4 +1858,12 @@
     font-size: 12px;
     padding-inline: 20px;
   }
+}
+
+/* Live bracket shown full screen on the projector. */
+.bracket-live:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+  overflow: auto;
 }

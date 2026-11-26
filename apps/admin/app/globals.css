@@ -60,31 +60,11 @@ h1, h2 {
   line-height: 1.15;
 }
 
+/* Cropped logo file (brand/logo-full.svg): its size is the drawing itself. */
 .admin-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.admin-wordmark {
-  font-family: var(--font-inter), sans-serif;
-  font-size: 48px;
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: -0.075em;
-  line-height: 0.95;
-}
-
-.admin-wordmark > span {
-  color: var(--color-accent);
-}
-
-.admin-brand-label {
-  color: oklch(from currentColor l c h / 0.65);
-  font-size: 10px;
-  font-weight: 650;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  display: block;
+  width: auto;
+  height: 80px;
 }
 
 /* Top bar: brand, horizontally scrollable navigation, account. */
@@ -101,13 +81,7 @@ h1, h2 {
 }
 
 .admin-topbar .admin-brand {
-  flex-direction: row;
-  align-items: baseline;
-  gap: 10px;
-}
-
-.admin-topbar .admin-wordmark {
-  font-size: 30px;
+  height: 48px;
 }
 
 .admin-navigation {

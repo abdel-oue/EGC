@@ -73,7 +73,10 @@ export default async function EventPage({ params }) {
         <div className="space-y-6">
           <p className="whitespace-pre-line text-lg">{localized(event, "description", locale)}</p>
           <dl className={`grid gap-4 sm:grid-cols-2 ${event.max_registrations ? "lg:grid-cols-4" : "lg:grid-cols-3"}`}>
-            <div><dt className="font-bold">{labels.date}</dt><dd>{eventDate(event.starts_at, locale)}</dd></div>
+            <div><dt className="font-bold">{labels.date}</dt><dd>
+              {eventDate(event.starts_at, locale)}
+              {event.second_day_at && <><br />{eventDate(event.second_day_at, locale)}</>}
+            </dd></div>
             <div><dt className="font-bold">{labels.location}</dt><dd>{event.location}</dd></div>
             <div>
               <dt className="font-bold">{labels.format}</dt>
@@ -81,15 +84,18 @@ export default async function EventPage({ params }) {
             </div>
             {event.max_registrations && (
               <div>
-                <dt className="font-bold">{labels.places}</dt>
+                <dt className="font-bold">{labels.spots}</dt>
                 <dd>{placesLabel(event, labels)}</dd>
               </div>
             )}
           </dl>
           <Prizes text={event.prizes || ""} labels={labels} />
           {registrationOpen(event) ? (
-            <HudButton href={`/${locale}/events/${slug}/register`}>{labels.signup}</HudButton>
-          ) : <p>{past ? labels.pastEvent : registrationFull(event) ? labels.full : labels.closed}</p>}
+            <div className="space-y-3">
+              {registrationFull(event) && <p className="font-bold text-accent">{labels.fullNotice}</p>}
+              <HudButton href={`/${locale}/events/${slug}/register`}>{registrationFull(event) ? labels.joinWaitlist : labels.signup}</HudButton>
+            </div>
+          ) : <p>{past ? labels.pastEvent : labels.closed}</p>}
         </div>
       ),
     },
@@ -106,6 +112,7 @@ export default async function EventPage({ params }) {
       content: (
         <div className="space-y-8">
           <Prizes text={event.prizes || ""} labels={labels} />
+          {matches.length > 0 && <HudButton href={`/${locale}/events/${slug}/bracket`}>{labels.openBoard}</HudButton>}
           {matches.length
             ? <Bracket matches={matches} names={names} seeds={seeds} labels={labels} />
             : <p className="border border-line bg-panel p-6">{labels.noBracket}</p>}

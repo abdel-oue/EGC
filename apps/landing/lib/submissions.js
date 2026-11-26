@@ -141,5 +141,9 @@ export async function registerEvent(eventId, _previous, form) {
     return { verify: data.email, error: "codeLocked" };
   }
 
+  if (outcome === "waitlisted" && !error) {
+    return { ok: true, waitlisted: true };
+  }
+
   return result(error);
 }

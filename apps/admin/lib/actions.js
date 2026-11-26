@@ -156,12 +156,13 @@ export async function updateRegistrations(eventId, ids, status) {
   return { success: "saved" };
 }
 
-// Paid / present switches (check-in desk).
+// Paid / present switches (check-in desk; present2 = second day).
 export async function setRegistrationFlag(eventId, id, flag, value) {
   const { client } = await requireStaff();
   const changes = {
     paid: { paid: value === true },
     present: { checked_in_at: value === true ? new Date().toISOString() : null },
+    present2: { checked_in_day2_at: value === true ? new Date().toISOString() : null },
   }[flag];
 
   if (!changes || !uuid.test(eventId) || !uuid.test(id)) {
@@ -272,17 +273,20 @@ export async function saveMatchWinner(eventId, round, position, _previous, form)
   let updated;
 
   try {
-    updated = setWinner(matches, round, position, String(form.get("winner") || ""));
+    updated = setWinner(matches, round, position, String(form.get("winner") || ""), {
+      score: String(form.get("score") || "").trim().slice(0, 20) || null,
+      forfeit: form.get("forfeit") === "on",
+    });
   } catch {
     return { error: "error" };
   }
 
-  const changed = updated.filter((match, index) => ["team_a", "team_b", "winner"]
+  const changed = updated.filter((match, index) => ["team_a", "team_b", "winner", "score", "forfeit"]
     .some((key) => match[key] !== matches[index][key]));
 
   for (const match of changed) {
     const { error: updateError } = await client.from("event_matches")
-      .update({ team_a: match.team_a, team_b: match.team_b, winner: match.winner })
+      .update({ team_a: match.team_a, team_b: match.team_b, winner: match.winner, score: match.score, forfeit: match.forfeit })
       .eq("id", match.id).select("id").single();
 
     if (updateError) {

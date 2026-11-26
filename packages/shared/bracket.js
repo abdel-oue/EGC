@@ -44,8 +44,37 @@ function drawOrder(size) {
   return order;
 }
 
+// "Finale", "Demi-finales", "Quarts", then "8es / 16es / 32es de finale" from the slots in the round.
+export function roundName(round, total, labels) {
+  const size = 2 ** (total - round + 1);
+
+  if (size === 2) {
+    return labels.final;
+  }
+
+  if (size === 4) {
+    return labels.semifinals;
+  }
+
+  if (size === 8) {
+    return labels.quarterfinals;
+  }
+
+  return labels.roundOf.replace("{n}", size / 2).replace("{size}", size);
+}
+
+function lastRound(matches) {
+  return Math.max(...matches.map((match) => match.round));
+}
+
+// The match for 3rd place sits next to the final: last round, position 1.
+export function isThirdPlace(match, matches) {
+  return match.position === 1 && match.round === lastRound(matches);
+}
+
 // Single elimination from entries listed strongest first: the top seeds get the byes,
 // every round is created up front and byes advance automatically.
+// From 4 entries on, semi-final losers play a match for 3rd place.
 export function createBracket(entryIds) {
   if (entryIds.length < 2) {
     return [];
@@ -57,8 +86,12 @@ export function createBracket(entryIds) {
 
   for (let round = 1; round <= rounds; round += 1) {
     for (let position = 0; position < 2 ** (rounds - round); position += 1) {
-      matches.push({ round, position, team_a: null, team_b: null, winner: null });
+      matches.push({ round, position, team_a: null, team_b: null, winner: null, score: null, forfeit: false });
     }
+  }
+
+  if (entryIds.length >= 4) {
+    matches.push({ round: rounds, position: 1, team_a: null, team_b: null, winner: null, score: null, forfeit: false });
   }
 
   // The better seed is always team_a and always exists, so byes only leave team_b empty.
@@ -78,8 +111,8 @@ export function createBracket(entryIds) {
   return matches;
 }
 
-// Returns a copy with the winner recorded and carried into the next round.
-export function setWinner(matches, round, position, winner) {
+// Returns a copy with the winner (and optional score / forfeit) recorded and carried forward.
+export function setWinner(matches, round, position, winner, { score = null, forfeit = false } = {}) {
   const copy = matches.map((match) => ({ ...match }));
   const match = find(copy, round, position);
 
@@ -88,6 +121,8 @@ export function setWinner(matches, round, position, winner) {
   }
 
   advance(copy, match, winner);
+  match.score = score;
+  match.forfeit = forfeit;
   return copy;
 }
 
@@ -95,8 +130,26 @@ function find(matches, round, position) {
   return matches.find((match) => match.round === round && match.position === position);
 }
 
+// A semi-final also sends its loser to the match for 3rd place.
+function semiFinalLoser(matches, match, team) {
+  const last = lastRound(matches);
+  const third = match.round === last - 1 && find(matches, last, 1);
+
+  if (third) {
+    place(matches, third, match.position % 2 === 0 ? "team_a" : "team_b", team);
+  }
+}
+
+function place(matches, target, slot, team) {
+  if (target[slot] !== team) {
+    target[slot] = team;
+    reset(matches, target);
+  }
+}
+
 function advance(matches, match, winner) {
   match.winner = winner;
+  semiFinalLoser(matches, match, winner === match.team_a ? match.team_b : match.team_a);
   const following = find(matches, match.round + 1, Math.floor(match.position / 2));
   const slot = match.position % 2 === 0 ? "team_a" : "team_b";
 
@@ -114,6 +167,9 @@ function reset(matches, match) {
 
   const previous = match.winner;
   match.winner = null;
+  match.score = null;
+  match.forfeit = false;
+  semiFinalLoser(matches, match, null);
   const following = find(matches, match.round + 1, Math.floor(match.position / 2));
   const slot = match.position % 2 === 0 ? "team_a" : "team_b";
 

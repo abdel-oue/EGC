@@ -182,13 +182,12 @@ test("registration windows are enforced including exact closing boundary", () =>
   assert.equal(registrationOpen({ ...base, registration_opens_at: new Date(now).toISOString() }, now), true);
 });
 
-test("a full event closes registration with its own error", () => {
+test("a full event stays open for the waiting list", () => {
   const capped = { ...base, max_registrations: 64 };
   assert.equal(registrationFull(base), false);
-  assert.equal(registrationOpen({ ...capped, registration_count: 63 }, now), true);
+  assert.equal(registrationFull({ ...capped, registration_count: 63 }), false);
   assert.equal(registrationFull({ ...capped, registration_count: 64 }), true);
-  assert.equal(registrationOpen({ ...capped, registration_count: 64 }, now), false);
-  assert.equal(validateEventRegistration(new FormData(), { ...capped, registration_count: 64 }, now).errors.form, "full");
+  assert.equal(registrationOpen({ ...capped, registration_count: 64 }, now), true);
 });
 
 test("Casablanca conversion honors winter offset and Ramadan time", () => {

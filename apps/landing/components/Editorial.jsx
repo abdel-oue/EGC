@@ -18,12 +18,9 @@ export function Arrow({ down = false, className = "" }) {
     </svg>
   );
 }
+// Official full logo (icon + "ESISA Gaming Club"); the surrounding link carries the name.
 export function Wordmark() {
-  return (
-    <span className="wordmark" aria-hidden="true">
-      EGC<span>.</span>
-    </span>
-  );
+  return <Image src="/brand/logo-full.svg" alt="" width={1278} height={542} priority className="wordmark" />;
 }
 export function PageIntro({
   eyebrow,

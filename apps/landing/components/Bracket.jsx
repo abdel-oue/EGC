@@ -1,19 +1,7 @@
+import { isThirdPlace, roundName as slotName } from "@egc/shared/bracket.js";
+
 function roundName(round, total, playIn, labels) {
-  const fromEnd = total - round;
-
-  if (fromEnd === 0) {
-    return labels.final;
-  }
-
-  if (fromEnd === 1) {
-    return labels.semifinals;
-  }
-
-  if (fromEnd === 2) {
-    return labels.quarterfinals;
-  }
-
-  return round === 1 && playIn ? labels.playIn : `${labels.round} ${round}`;
+  return round === 1 && playIn ? labels.playIn : slotName(round, total, labels);
 }
 
 function Match({ match, names, seeds, labels, tone }) {
@@ -33,6 +21,8 @@ function Match({ match, names, seeds, labels, tone }) {
               {team ? seeds.get(team) : "–"}
             </span>
             <span className="truncate">{team ? names.get(team) || labels.tbd : labels.tbd}</span>
+            {won && match.score && <span className="ml-auto shrink-0 text-xs tabular-nums text-accent">{match.score}</span>}
+            {lost && match.forfeit && <span className="ml-auto shrink-0 text-xs uppercase">{labels.forfeit}</span>}
           </p>
         );
       })}
@@ -59,13 +49,14 @@ function Connector({ count }) {
 // Round-one byes are left out; their group simply holds fewer matches.
 export default function Bracket({ matches, names, seeds, labels }) {
   const total = Math.max(...matches.map((match) => match.round));
+  const third = matches.find((match) => isThirdPlace(match, matches));
   const playIn = matches.some((match) => match.round === 1 && !match.team_b);
   const columns = Array.from({ length: total }, (_, index) => {
     const round = index + 1;
     const groups = Array.from({ length: round === total ? 1 : 2 ** (total - round - 1) }, () => []);
 
     for (const match of matches.filter((item) => item.round === round)) {
-      if (!(round === 1 && !match.team_b)) {
+      if (!(round === 1 && !match.team_b) && match !== third) {
         groups[round === total ? 0 : Math.floor(match.position / 2)].push(match);
       }
     }
@@ -97,6 +88,12 @@ export default function Bracket({ matches, names, seeds, labels }) {
                     ))}
                   </div>
                 ))}
+                {round === total && third && (
+                  <div className="mt-6">
+                    <h3 className="font-display text-xs font-bold uppercase tracking-widest text-offwhite/70">{labels.thirdPlace}</h3>
+                    <Match match={third} names={names} seeds={seeds} labels={labels} tone="border-offwhite/10 bg-graphite border-l-offwhite/30" />
+                  </div>
+                )}
               </div>
             </section>
             {round < total && (

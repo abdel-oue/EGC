@@ -1,5 +1,5 @@
 import t from "@egc/shared/admin.json";
-import { seedEntries } from "@egc/shared/bracket.js";
+import { isThirdPlace, roundName, seedEntries } from "@egc/shared/bracket.js";
 import { generateBracket, saveMatchWinner, saveSeeds } from "@/lib/actions";
 import ActionForm from "@/components/ActionForm";
 
@@ -12,6 +12,12 @@ export default function BracketPanel({ eventId, entries, matches }) {
   const seeded = seedEntries(entries);
   const names = new Map(seeded.map((entry, index) => [entry.id, `${index + 1}. ${entryName(entry)}`]));
   const rounds = [...new Set(matches.map((match) => match.round))];
+  const third = matches.find((match) => isThirdPlace(match, matches));
+  // The 3rd-place match gets its own column after the final.
+  const columns = [
+    ...rounds.map((round) => [roundName(round, rounds.length, t), matches.filter((match) => match.round === round && match !== third)]),
+    ...(third ? [[t.thirdPlace, [third]]] : []),
+  ];
 
   return (
     <>
@@ -65,13 +71,11 @@ export default function BracketPanel({ eventId, entries, matches }) {
         </div>
       </details>
       <div className="grid gap-8 xl:grid-cols-[repeat(auto-fit,minmax(260px,1fr))]">
-        {rounds.map((round) => (
-          <section key={round}>
-            <h2 className="mb-4 font-display text-xl font-bold uppercase">
-              {round === rounds.length ? t.final : `${t.round} ${round}`}
-            </h2>
+        {columns.map(([title, list]) => (
+          <section key={title}>
+            <h2 className="mb-4 font-display text-xl font-bold uppercase">{title}</h2>
             <ol className="space-y-4">
-              {matches.filter((match) => match.round === round).map((match) => (
+              {list.map((match) => (
                 <li key={match.id} className="border border-line bg-panel p-4">
                   {match.team_a && match.team_b ? (
                     <ActionForm action={saveMatchWinner.bind(null, eventId, match.round, match.position)} submitLabel={t.setWinner}>
@@ -84,6 +88,14 @@ export default function BracketPanel({ eventId, entries, matches }) {
                           </label>
                         ))}
                       </fieldset>
+                      <label className="block">
+                        <span className="mb-1 block text-sm">{t.score}</span>
+                        <input name="score" defaultValue={match.score || ""} maxLength={20} />
+                      </label>
+                      <label className="flex items-center gap-3">
+                        <input type="checkbox" name="forfeit" defaultChecked={match.forfeit} className="size-5" />
+                        <span className="text-sm">{t.forfeit}</span>
+                      </label>
                     </ActionForm>
                   ) : (
                     <p>

@@ -52,9 +52,12 @@ export default async function RegistrationPage({ params }) {
             <Rules sections={rules} />
           </section>
         )}
+        {registrationOpen(event) && registrationFull(event) && (
+          <p role="status" className="border border-accent bg-panel p-5 font-bold">{dict.content.fullNotice}</p>
+        )}
         {registrationOpen(event) ? (
           <SubmissionForm action={registerEvent.bind(null, event.id)} locale={locale} labels={dict.content} rankLabels={dict.register.ranks} event={event} />
-        ) : <p role="status">{registrationFull(event) ? dict.content.full : dict.content.closed}</p>}
+        ) : <p role="status">{dict.content.closed}</p>}
       </div>
     </main>
   );

@@ -37,6 +37,7 @@ export function validateContact(form) {
 }
 
 // registration_count is the public computed column (pending + approved entries).
+// A full event stays open: new entries join the waiting list.
 export function registrationFull(event) {
   return Boolean(event && event.max_registrations != null &&
     (event.registration_count ?? 0) >= event.max_registrations);
@@ -44,7 +45,7 @@ export function registrationFull(event) {
 
 export function registrationOpen(event, now = Date.now()) {
   return Boolean(
-    event && event.status === "published" && event.registration_enabled && !registrationFull(event) &&
+    event && event.status === "published" && event.registration_enabled &&
     new Date(event.starts_at).getTime() > now &&
     (!event.registration_opens_at || new Date(event.registration_opens_at).getTime() <= now) &&
     (!event.registration_closes_at || new Date(event.registration_closes_at).getTime() > now)
@@ -119,7 +120,7 @@ export function validateEventRegistration(form, event, now = Date.now()) {
   const errors = {};
 
   if (!registrationOpen(event, now)) {
-    return { data: null, errors: { form: registrationFull(event) ? "full" : "closed" } };
+    return { data: null, errors: { form: "closed" } };
   }
 
   const team = event.entry_type === "team";

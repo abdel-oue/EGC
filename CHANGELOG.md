@@ -10,11 +10,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Event registrations ask for a phone number and are confirmed in a second step with a 6-digit code emailed from noreply@esisa-gaming.club (2 wrong codes lock the address for 20 minutes).
 - Per-event "accept any email" switch; when off, only @esisa.ac.ma addresses can register.
 - Solo events (outside Valorant) only ask for name, email and phone.
+- Waiting list: a full event keeps its "S'inscrire" button; new entries join the waiting list (shown with their rank in the admin) and staff promote them when a place frees up.
+- Tournaments over two days: optional second day (shown on the event page) with its own check-in, listing only players still in the bracket.
+- Brackets: match for 3rd place between the semi-final losers, round names ("32es de finale", "16es"… / "Round of 64"…), and an optional score and forfeit on each result, shown on the public bracket.
+- Draw wheel: the projector draw screen spins a wheel holding every remaining player; each spin lands on the next drawn player and two players form a match.
+- The official logo (icon + "ESISA Gaming Club"), cropped to its drawing, replaces the "EGC." text in the site header and footer and in the admin.
+- Live bracket page (`/events/<slug>/bracket`): two-sided layout for big draws (top half from the left, bottom half from the right, final in the centre), full-screen button for the projector, refreshed every minute, with an "Afficher depuis" choice to start at any round (e.g. the 16es on the final day) through to the final. Linked from the event's bracket tab.
+- Optional payment deadline per event: unpaid external players are flagged "En retard" in the admin, with a filter.
+- Demo data script (`supabase/test-data/fc27-demo.sql`, with its cleanup script) to check registrations, waiting list, check-in, bracket and draw.
+
 - Admin: each event has its own page with tabs (Inscriptions, Tirage au sort, Tableau et résultats, Infos et réglages). Registrations can be searched and filtered (status, ESISA/external, payment, presence), approved or rejected in bulk, exported to CSV, and their emails or phones copied. Staff mark external players as paid and check players in from a phone.
 - Admin: live draw. "Lancer le tirage au sort" places approved players at random, and a full-screen projector page reveals the first-round matches one by one.
 - Admin: top navigation bar instead of the sidebar, a dashboard with upcoming events (places, to review, unpaid, present) and a to-do list, and an event form grouped in sections with help text and a collapsible English translation.
 - Event registration asks for the school (ESISA or another school's name) when other schools are allowed; choosing ESISA requires the @esisa.ac.ma address.
-- Optional maximum number of places per event (e.g. 64 players). Event pages and cards show "taken / max" to every visitor, and a full event stops sending codes and accepting registrations. Rejected registrations free their place.
+- Optional maximum number of places per event (e.g. 64 players). Event pages and cards show "taken / max" to every visitor. Rejected and waiting-list entries do not take a place.
 
 - Next.js 16 project setup (JavaScript, Tailwind CSS v4, ESLint).
 - CLAUDE.md with project conventions.
@@ -44,7 +53,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: [S
 - Forms page with online forms; staff review responses and open or close each form from the admin app.
 - First form: application to represent EGC on FIFA at the K-Otaku Gaming Expo (21 November 2026).
 
+
 ### Fixed
+- Event card pictures keep their proportions instead of being stretched.
+- The "Places" label on event pages no longer shows the prize list.
 - Landing pages no longer hang or render empty on Cloudflare Workers, and links navigate correctly.
 - Member portraits are visible to the public again.
 - Instagram, Discord and Twitch links, with a Discord icon matching the other social icons.

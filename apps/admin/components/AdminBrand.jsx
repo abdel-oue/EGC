@@ -1,10 +1,6 @@
+import Image from "next/image";
+
+// Official full logo (icon + "ESISA Gaming Club"); the surrounding link or page title carries the name.
 export default function AdminBrand() {
-  return (
-    <div className="admin-brand">
-      <span className="admin-wordmark" aria-hidden="true">
-        EGC<span>.</span>
-      </span>
-      <span className="admin-brand-label">ESISA Gaming Club</span>
-    </div>
-  );
+  return <Image src="/brand/logo-full.svg" alt="" width={1278} height={542} priority className="admin-brand" />;
 }

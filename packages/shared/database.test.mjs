@@ -32,7 +32,7 @@ test("migrations, submission functions, permissions, media visibility and audit 
       insert into vault.decrypted_secrets values ('registration_code_secret', 'test-secret');
     `);
 
-    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql", "20261103000000_forms.sql", "20261124000000_verified_registrations.sql", "20261127000000_event_hub.sql"]) {
+    for (const name of ["20261022000000_team_registrations.sql", "20261023000000_club_apps.sql", "20261025000000_event_rules_brackets.sql", "20261030000000_event_seeds.sql", "20261030120000_event_prizes.sql", "20261103000000_forms.sql", "20261124000000_verified_registrations.sql", "20261127000000_event_hub.sql", "20261128000000_tournament_days.sql"]) {
       await db.exec(await readFile(new URL(`../../supabase/migrations/${name}`, import.meta.url), "utf8"));
 
       if (name === "20261022000000_team_registrations.sql") {
@@ -137,12 +137,23 @@ test("migrations, submission functions, permissions, media visibility and audit 
     assert.equal(await submitRegistration(second), null);
     assert.deepEqual(await places(), { taken: 2, full: true });
     const third = { ...solo, name: "Omar Fc", email: "omar@esisa.ac.ma", code: await code("omar@esisa.ac.ma", solo.event_id) };
-    await assert.rejects(requestCode(third.email), { code: "P0004" });
-    await assert.rejects(submitRegistration(third), { code: "P0004" });
+    // Full: the next entry joins the waiting list and takes no place.
+    await requestCode(third.email);
+    assert.equal(await submitRegistration(third), "waitlisted");
+    assert.deepEqual(await places(), { taken: 2, full: true });
     // A rejected registration frees its place.
     await db.exec("reset role; update event_registrations set status = 'rejected' where email = 'nora@esisa.ac.ma'; set role anon;");
     assert.deepEqual(await places(), { taken: 1, full: false });
-    await db.exec("reset role; delete from event_registrations where email = 'nora@esisa.ac.ma'; update events set max_registrations = null; set role anon;");
+    await db.exec("reset role;");
+    assert.equal((await db.query("select status from event_registrations where email = 'omar@esisa.ac.ma'")).rows[0].status, "waitlisted");
+    await db.exec(`
+      delete from event_registrations where email in ('nora@esisa.ac.ma', 'omar@esisa.ac.ma');
+      update events set max_registrations = null;
+      insert into event_matches (event_id, round, position, score, forfeit) values ('10000000-0000-0000-0000-000000000002', 1, 0, '2-1', true);
+    `);
+    await assert.rejects(db.query("insert into event_matches (event_id, round, position, score) values ('10000000-0000-0000-0000-000000000002', 1, 1, $1)", ["x".repeat(21)]));
+    await assert.rejects(db.query("update events set second_day_at = starts_at - interval '1 day' where slug = 'fc-solo'"));
+    await db.exec("delete from event_matches; set role anon;");
 
     await db.exec("reset role; set role authenticated; set request.jwt.claim.sub = '00000000-0000-0000-0000-000000000002';");
     assert.equal((await db.query("select * from contact_messages")).rows.length, 1);

@@ -14,12 +14,14 @@ export const resources = {
       ["rules_en", "textarea"],
       ["prizes", "textarea"],
       ["starts_at", "datetime-local", true],
+      ["second_day_at", "datetime-local"],
       ["location", "text", true],
       ["status", "select", true, ["draft", "published", "archived"]],
       ["registration_enabled", "checkbox"],
       ["allow_any_email", "checkbox"],
       ["registration_opens_at", "datetime-local"],
       ["registration_closes_at", "datetime-local"],
+      ["payment_deadline", "datetime-local"],
       ["entry_type", "select", true, ["individual", "team"]],
       ["player_count", "number", true],
       ["substitute_count", "number", true],
@@ -29,8 +31,8 @@ export const resources = {
     // Admin form sections, in order; the last one is collapsed.
     groups: [
       ["groupGeneral", ["title_fr", "game", "status", "slug"]],
-      ["groupWhen", ["starts_at", "location"]],
-      ["groupRegistration", ["registration_enabled", "allow_any_email", "max_registrations", "registration_opens_at", "registration_closes_at"]],
+      ["groupWhen", ["starts_at", "second_day_at", "location"]],
+      ["groupRegistration", ["registration_enabled", "allow_any_email", "max_registrations", "registration_opens_at", "registration_closes_at", "payment_deadline"]],
       ["groupFormat", ["entry_type", "player_count", "substitute_count"]],
       ["groupTexts", ["description_fr", "rules_fr", "prizes"]],
       ["groupEnglish", ["title_en", "description_en", "rules_en"]],
@@ -85,7 +87,7 @@ export const submissions = {
   contacts: { table: "contact_messages", statuses: ["new", "in-progress", "resolved"] },
   registrations: {
     table: "event_registrations",
-    statuses: ["pending", "approved", "rejected"],
+    statuses: ["pending", "approved", "waitlisted", "rejected"],
     parent: { column: "event_id", table: "events", order: "starts_at" },
   },
   responses: {
@@ -148,6 +150,10 @@ export function validateResource(resource, data) {
     if (data.registration_opens_at && data.registration_closes_at &&
       Date.parse(data.registration_opens_at) >= Date.parse(data.registration_closes_at)) {
       errors.registration_closes_at = "invalid";
+    }
+
+    if (data.second_day_at && Date.parse(data.second_day_at) <= Date.parse(data.starts_at)) {
+      errors.second_day_at = "invalid";
     }
 
     if (data.registration_closes_at && Date.parse(data.registration_closes_at) > Date.parse(data.starts_at)) {

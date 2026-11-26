@@ -255,9 +255,14 @@
     "signup": "S’inscrire",
     "details": "Découvrir l’événement",
     "closed": "Les inscriptions ne sont pas ouvertes.",
-    "places": "Places",
+    "places": [
+      "Vainqueur",
+      "Finaliste",
+      "3e place",
+      "4e place"
+    ],
     "placesCount": "{taken} / {max} inscrits",
-    "full": "Complet : toutes les places sont prises.",
+    "full": "Complet · liste d’attente ouverte",
     "emptyGallery": "Les premiers moments de ce jeu arrivent bientôt.",
     "promotion": "Visuel promotionnel",
     "photo": "Photo du club",
@@ -342,12 +347,6 @@
     "quarterfinals": "Quarts de finale",
     "semifinals": "Demi-finales",
     "prizesTitle": "Cashprize",
-    "places": [
-      "Vainqueur",
-      "Finaliste",
-      "3e place",
-      "4e place"
-    ],
     "verifyTitle": "Vérifie ton e-mail",
     "confirm": "Confirmer l’inscription",
     "editDetails": "Modifier mes informations",
@@ -357,6 +356,17 @@
     "codeEmailExpiry": "Il reste valable 10 minutes. Ne le partage avec personne, même pas avec le bureau.",
     "codeEmailIgnore": "Tu n’as rien demandé ? Ignore simplement cet e-mail : aucune inscription ne sera créée.",
     "codeEmailTagline": "Le club e-sport de l’ESISA, Fès.",
-    "codeEmailAuto": "E-mail automatique, merci de ne pas y répondre. Une question ? Écris-nous depuis la page Contact du site."
+    "codeEmailAuto": "E-mail automatique, merci de ne pas y répondre. Une question ? Écris-nous depuis la page Contact du site.",
+    "fullNotice": "Le tournoi est complet. Inscris-toi pour rejoindre la liste d’attente : on te contacte si une place se libère.",
+    "joinWaitlist": "Rejoindre la liste d’attente",
+    "waitlisted": "Le tournoi est complet : tu es sur la liste d’attente. On te contacte si une place se libère.",
+    "roundOf": "{n}es de finale",
+    "thirdPlace": "Match pour la 3e place",
+    "forfeit": "Forfait",
+    "spots": "Places",
+    "openBoard": "Ouvrir le tableau en plein écran",
+    "fullscreen": "Plein écran",
+    "liveUpdate": "Mis à jour à {time} · actualisation automatique chaque minute",
+    "showFrom": "Afficher depuis"
   }
 }

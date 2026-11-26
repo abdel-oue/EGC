@@ -30,7 +30,7 @@ export default function About({ locale = "fr" }) {
         <Image
           src="/brand/logo-full-night.svg"
           alt="ESISA Gaming Club"
-          width={180}
+          width={177}
           height={75}
           className="about-logo"
         />
